@@ -1,6 +1,6 @@
 #parent class for alert calculator, child of calculator class
 from datetime import timedelta
-from Calculator.Calculator import Calculator
+from ..Calculator import Calculator
 
 class AlertCalc(Calculator):
     def __init__(self, zulu_alert_time, burnout_constant=48):
