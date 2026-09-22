@@ -1,9 +1,9 @@
 #AirdropBasic.py
 #parent class for airdrop basic calculator, child of flight parent calc class
 from datetime import timedelta
-from .FlightParentCalculator import FlightParentCalculator as FlightParentCalc
+from .FlightParentCalculator import FlightParentCalculator
 
-class AirdropBasic(FlightParentCalc):
+class AirdropBasic(FlightParentCalculator):
     alert_offset = timedelta(hours=4, minutes=15)
     def __init__(self, zulu_takeoff_time, showtime_adjustment=timedelta(minutes=60),
                  stationtime_adjustment=timedelta(minutes=45),
