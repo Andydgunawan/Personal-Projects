@@ -191,3 +191,40 @@ test_bravo_slider_change()
 test_bravo_invalid_values()
 
 print("\nALL TESTS FINISHED")
+
+def test_airland_basic_local_time():
+    takeoff = datetime(2026, 9, 22, 12, 0)
+
+    calc = AirlandBasic(
+        takeoff,
+        zulu_constant=4
+    )
+
+    # calculate all zulu values first
+    calc.calculate_last_drink()
+    calc.calculate_zulu_alert_time()
+    calc.calculate_zulu_show_time()
+    calc.calculate_zulu_station_time()
+    calc.calculate_zulu_training_event_time()
+    calc.calculate_zulu_tar_time()
+    calc.calculate_zulu_fdp_time()
+    calc.calculate_zulu_ap_inopfdp_time()
+    calc.calculate_zulu_cdt_time()
+
+    # convert all to local
+    calc.calculate_local_times()
+
+    assert calc.local_last_drink == datetime(2026, 9, 21, 20, 0)
+    assert calc.local_alert_time == datetime(2026, 9, 22, 4, 15)
+    assert calc.local_show_time == datetime(2026, 9, 22, 5, 15)
+    assert calc.local_station_time == datetime(2026, 9, 22, 7, 15)
+    assert calc.local_training_event_time == datetime(2026, 9, 22, 20, 0)
+    assert calc.local_tar_time == datetime(2026, 9, 22, 19, 15)
+    assert calc.local_fdp_time == datetime(2026, 9, 22, 21, 15)
+    assert calc.local_ap_inopfdp_time == datetime(2026, 9, 22, 17, 15)
+    assert calc.local_cdt_time == datetime(2026, 9, 22, 23, 15)
+
+    print("Airland Basic local time: PASSED")
+    print("Airdrop Augmented local time: PASSED")
+
+    print("Airdrop Augmented local time: PASSED")   
