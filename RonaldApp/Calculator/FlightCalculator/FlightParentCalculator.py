@@ -11,10 +11,11 @@ class FlightParentCalculator(Calculator):
         #default values for showtime and stationtime adjustments, augment variable, and qualifying leg
         showtime_adjustment=timedelta(minutes=60),
         stationtime_adjustment=timedelta(minutes=45),
+        zulu_constant=0,
         augment_variable=False,
         qualifying_leg=False
     ):
-        super().__init__()
+        super().__init__(zulu_constant)
 
         #inputs
         self.zulu_takeoff_time = zulu_takeoff_time
@@ -33,6 +34,17 @@ class FlightParentCalculator(Calculator):
         self.zulu_fdp_time = None
         self.zulu_ap_inopfdp_time = None
         self.zulu_cdt_time = None
+
+        # local variables to be calculated
+        self.local_last_drink = None
+        self.local_alert_time = None
+        self.local_show_time = None
+        self.local_station_time = None
+        self.local_training_event_time = None
+        self.local_tar_time = None
+        self.local_fdp_time = None
+        self.local_ap_inopfdp_time = None
+        self.local_cdt_time = None
 
     #setters
     def set_zulu_takeoff_time(self, zulu_takeoff_time: datetime):
@@ -115,3 +127,41 @@ class FlightParentCalculator(Calculator):
             self.zulu_show_time + timedelta(hours=18)
         )
         return self.zulu_cdt_time
+
+    # calculates the local time using zulu constant
+    def calculate_local_times(self):
+        self.local_last_drink = self.calculate_to_local_time(
+        self.last_drink
+        )
+
+        self.local_alert_time = self.calculate_to_local_time(
+            self.zulu_alert_time
+        )
+
+        self.local_show_time = self.calculate_to_local_time(
+            self.zulu_show_time
+        )
+
+        self.local_station_time = self.calculate_to_local_time(
+            self.zulu_station_time
+        )
+
+        self.local_training_event_time = self.calculate_to_local_time(
+            self.zulu_training_event_time
+        )
+
+        self.local_tar_time = self.calculate_to_local_time(
+            self.zulu_tar_time
+        )
+
+        self.local_fdp_time = self.calculate_to_local_time(
+            self.zulu_fdp_time
+        )
+
+        self.local_ap_inopfdp_time = self.calculate_to_local_time(
+            self.zulu_ap_inopfdp_time
+        )
+
+        self.local_cdt_time = self.calculate_to_local_time(
+            self.zulu_cdt_time
+        )
