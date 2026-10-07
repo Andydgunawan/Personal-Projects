@@ -1,0 +1,12 @@
+{
+    "python-envs.pythonProjects": [
+        {
+            "path": ".",
+            "envManager": "ms-python.python:system",
+            "packageManager": "ms-python.python:pip"
+        }
+    ],
+    "python.terminal.executeInFileDir": false,
+    "python.defaultInterpreterPath": "C:\\Users\\AndyD\\.local\\bin\\python3.14.exe"
+ 
+}

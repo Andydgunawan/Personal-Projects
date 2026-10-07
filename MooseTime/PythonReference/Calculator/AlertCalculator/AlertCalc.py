@@ -1,6 +1,5 @@
 #parent class for alert calculator, child of calculator class
-from datetime import timedelta
-import datetime
+from datetime import datetime,timedelta
 from ..Calculator import Calculator
 
 class AlertCalc(Calculator):
@@ -9,7 +8,7 @@ class AlertCalc(Calculator):
                 burnout_constant=48,
                 zulu_constant=0
                 ):
-        super().__init__(zulu_alert_time, zulu_constant)
+        super().__init__(zulu_constant )
 
         # inputs
         self.zulu_alert_time = zulu_alert_time
@@ -19,8 +18,6 @@ class AlertCalc(Calculator):
         self.last_drink = None
         self.burnout_time = None
         self.earliest_reset = None
-
-        self.burnout_constant = burnout_constant
 
     def calculate_last_drink(self):
         self.last_drink = (

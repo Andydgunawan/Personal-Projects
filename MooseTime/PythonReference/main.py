@@ -1,11 +1,11 @@
 from datetime import datetime
 
-from Calculator.FlightCalculator.AirlandBasic import AirlandBasic
-from Calculator.FlightCalculator.AirlandAugmented import AirlandAugmented
-from Calculator.FlightCalculator.AirdropBasic import AirdropBasic
-from Calculator.FlightCalculator.AirdropAugmented import AirdropAugmented
-from Calculator.AlertCalculator.Alpha import Alpha
-from Calculator.AlertCalculator.Bravo import Bravo
+from MooseTime.PythonReference.Calculator.FlightCalculator.AirlandBasic import AirlandBasic
+from MooseTime.PythonReference.Calculator.FlightCalculator.AirlandAugmented import AirlandAugmented
+from MooseTime.PythonReference.Calculator.FlightCalculator.AirdropBasic import AirdropBasic
+from MooseTime.PythonReference.Calculator.FlightCalculator.AirdropAugmented import AirdropAugmented
+from MooseTime.PythonReference.Calculator.AlertCalculator.Alpha import Alpha
+from MooseTime.PythonReference.Calculator.AlertCalculator.Bravo import Bravo
 
 # Test takeoff time
 takeoff = datetime(2026, 9, 22, 12, 0)

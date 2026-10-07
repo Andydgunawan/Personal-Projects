@@ -1,10 +1,12 @@
-from datetime import datetime, timedelta
+import sys
+from pathlib import Path
+sys.path.append(str(Path(__file__).resolve().parents[1]))
 
+from datetime import datetime, timedelta
 from Calculator.FlightCalculator.AirlandBasic import AirlandBasic
 from Calculator.FlightCalculator.AirlandAugmented import AirlandAugmented
 from Calculator.FlightCalculator.AirdropBasic import AirdropBasic
 from Calculator.FlightCalculator.AirdropAugmented import AirdropAugmented
-
 from Calculator.AlertCalculator.Alpha import Alpha
 from Calculator.AlertCalculator.Bravo import Bravo
 
