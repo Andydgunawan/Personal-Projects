@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 import '../utilities/julian_calendar.dart';
 
@@ -13,9 +15,12 @@ class _HomeScreenState extends State<HomeScreen> {
   String selectedMode = 'Airland Augmented';
 
   DateTime selectedDate = DateTime.now();
-  TimeOfDay takeoffTime = const TimeOfDay(hour: 14, minute: 30);
-
-  int zuluConstant = 0;
+final TextEditingController takeoffController =
+    TextEditingController(text: '1430');
+final TextEditingController zuluConstantController =
+    TextEditingController(text: '0');
+final TextEditingController earliestAlertController =
+    TextEditingController(text: '1430');
 
   bool qualifyingLegLong = false;
 
@@ -27,8 +32,8 @@ class _HomeScreenState extends State<HomeScreen> {
     'Airland Augmented',
     'Airdrop Basic',
     'Airdrop Augmented',
-    'Alpha',
-    'Bravo',
+    'Alpha Alert',
+    'Bravo Alert',
   ];
 
   int get julianDay {
@@ -50,33 +55,45 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  Future<void> selectTakeoffTime() async {
-    final pickedTime = await showTimePicker(
-      context: context,
-      initialTime: takeoffTime,
-    );
-
-    if (pickedTime != null) {
-      setState(() {
-        takeoffTime = pickedTime;
-      });
-    }
-  }
-
-  String formatTakeoffTime() {
-    final hour = takeoffTime.hour.toString().padLeft(2, '0');
-    final minute = takeoffTime.minute.toString().padLeft(2, '0');
-
-    return '$hour$minute';
-  }
-
   String formatDate() {
     return '${selectedDate.month}/${selectedDate.day}/${selectedDate.year}';
   }
 
+  bool isValidZuluTime(String value) {
+  if (value.length != 4) {
+    return false;
+  }
+
+  final hour = int.tryParse(value.substring(0, 2));
+  final minute = int.tryParse(value.substring(2, 4));
+
+  if (hour == null || minute == null) {
+    return false;
+  }
+
+  return hour >= 0 &&
+      hour <= 23 &&
+      minute >= 0 &&
+      minute <= 59;
+  }
+
+  bool isValidZuluConstant(String value) {
+  final zulu = int.tryParse(value);
+
+  if (zulu == null) {
+    return false;
+  }
+
+  return zulu >= -12 && zulu <= 14;
+}
+
   bool get isAugmented {
     return selectedMode == 'Airland Augmented' ||
         selectedMode == 'Airdrop Augmented';
+  }
+
+  bool get isAlertCalculator {
+  return selectedMode == 'Alpha Alert' || selectedMode == 'Bravo Alert';
   }
 
   @override
@@ -160,21 +177,28 @@ class _HomeScreenState extends State<HomeScreen> {
           buildJulianDay(),
           const Divider(height: 32),
 
-          buildTakeoffTime(),
-          const Divider(height: 32),
-
-          buildZuluConstant(),
-          const Divider(height: 32),
-
-          if (isAugmented) ...[
-            buildQualifyingLeg(),
+          if (isAlertCalculator) ...[
+            buildEarliestAlert(),
             const Divider(height: 32),
+
+            buildZuluConstant(),
+          ] else ...[
+            buildTakeoffTime(),
+            const Divider(height: 32),
+
+            buildZuluConstant(),
+            const Divider(height: 32),
+
+            if (isAugmented) ...[
+              buildQualifyingLeg(),
+              const Divider(height: 32),
+            ],
+
+            buildShowTimeAdjustment(),
+            const Divider(height: 32),
+
+            buildStationTimeAdjustment(),
           ],
-
-          buildShowTimeAdjustment(),
-          const Divider(height: 32),
-
-          buildStationTimeAdjustment(),
 
           const SizedBox(height: 24),
 
@@ -261,9 +285,10 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ),
                 ),
-
-                const Icon(
-                  Icons.calendar_month_outlined,
+                SvgPicture.asset(
+                  'assets/icons/calendar.svg',
+                  width: 24,
+                  height: 24,
                 ),
               ],
             ),
@@ -274,227 +299,266 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget buildTakeoffTime() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              'Takeoff Time (Zulu)',
-              style: sectionTitleStyle,
-            ),
-            Text(
-              'Enter wheels up time',
-              style: helperStyle,
-            ),
-          ],
-        ),
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      const Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            'Takeoff Time',
+            style: sectionTitleStyle,
+          ),
+          Text(
+            'Enter HHMM',
+            style: helperStyle,
+          ),
+        ],
+      ),
 
-        const SizedBox(height: 8),
+      const SizedBox(height: 8),
 
-        InkWell(
-          onTap: selectTakeoffTime,
-          borderRadius: BorderRadius.circular(14),
-          child: Container(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 16,
-              vertical: 14,
-            ),
-            decoration: inputBoxDecoration(),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  formatTakeoffTime(),
-                  style: const TextStyle(
-                    fontSize: 30,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const Icon(Icons.access_time),
-              ],
+      TextField(
+        controller: takeoffController,
+        keyboardType: TextInputType.number,
+        inputFormatters: [
+          FilteringTextInputFormatter.digitsOnly,
+          LengthLimitingTextInputFormatter(4),
+        ],
+        decoration: inputDecoration().copyWith(
+          hintText: '1430',
+          suffixIcon: Padding(
+            padding: const EdgeInsets.all(14),
+            child: SvgPicture.asset(
+              'assets/icons/clock.svg',
+              width: 20,
+              height: 20,
             ),
           ),
         ),
-      ],
-    );
-  }
+        style: const TextStyle(
+          fontSize: 30,
+          fontWeight: FontWeight.bold,
+        ),
+      )
+    ],
+  );
+}
+
+  Widget buildEarliestAlert() {
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      const Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            'Earliest Alert',
+            style: sectionTitleStyle,
+          ),
+          Text(
+            'Enter HHMM',
+            style: helperStyle,
+          ),
+        ],
+      ),
+
+      const SizedBox(height: 8),
+
+      TextField(
+        controller: earliestAlertController,
+        keyboardType: TextInputType.number,
+        inputFormatters: [
+          FilteringTextInputFormatter.digitsOnly,
+          LengthLimitingTextInputFormatter(4),
+        ],
+        decoration: inputDecoration().copyWith(
+          hintText: '1430',
+          suffixIcon: Padding(
+            padding: const EdgeInsets.all(14),
+            child: SvgPicture.asset(
+              'assets/icons/clock.svg',
+              width: 20,
+              height: 20,
+            ),
+          ),
+        ),
+        style: const TextStyle(
+          fontSize: 30,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+    ],
+  );
+}
 
   Widget buildZuluConstant() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              'Zulu Constant',
-              style: sectionTitleStyle,
-            ),
-            Text(
-              'Adjust as required',
-              style: helperStyle,
-            ),
-          ],
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      const Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            'Zulu Constant',
+            style: sectionTitleStyle,
+          ),
+          Text(
+            'Enter offset',
+            style: helperStyle,
+          ),
+        ],
+      ),
+
+      const SizedBox(height: 8),
+      TextField(
+        controller: zuluConstantController,
+        keyboardType: const TextInputType.numberWithOptions(
+          signed: true,
         ),
-
-        const SizedBox(height: 8),
-
-        Row(
-          children: [
-            Expanded(
-              child: Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 14,
-                ),
-                decoration: inputBoxDecoration(),
-                child: Text(
-                  '$zuluConstant',
-                  style: const TextStyle(
-                    fontSize: 28,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-            ),
-
-            const SizedBox(width: 12),
-
-            adjustmentButton(
-              icon: Icons.remove,
-              onPressed: () {
-                setState(() {
-                  zuluConstant--;
-                });
-              },
-            ),
-
-            const SizedBox(width: 8),
-
-            adjustmentButton(
-              icon: Icons.add,
-              onPressed: () {
-                setState(() {
-                  zuluConstant++;
-                });
-              },
-            ),
-          ],
+        inputFormatters: [
+          FilteringTextInputFormatter.allow(
+            RegExp(r'^-?\d{0,2}$'),
+          ),
+        ],
+        decoration: inputDecoration().copyWith(
+          hintText: '0',
         ),
-      ],
-    );
-  }
+        style: const TextStyle(
+          fontSize: 28,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+    ],
+  );
+}
 
   Widget buildQualifyingLeg() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          children: [
-            const Text(
-              'Qualifying Legs',
-              style: sectionTitleStyle,
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Row(
+        children: [
+          const Text(
+            'Qualifying Legs',
+            style: sectionTitleStyle,
+          ),
+          const SizedBox(width: 8),
+          IconButton(
+            icon: SvgPicture.asset(
+              'assets/icons/info.svg',
+              width: 20,
+              height: 20,
             ),
-            const SizedBox(width: 8),
-
-            IconButton(
-              icon: const Icon(
-                Icons.help_outline,
-                size: 20,
-              ),
-              onPressed: () {
-                showDialog(
-                  context: context,
-                  builder: (context) {
-                    return AlertDialog(
-                      title: const Text('Qualifying Legs'),
-                      content: const Text(
-                        'Choose the qualifying-leg rule that applies to the mission.',
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (context) {
+                  return AlertDialog(
+                    title: const Text('Qualifying Legs'),
+                    content: const Text(
+                      'Choose the qualifying-leg rule that applies to the mission.',
+                    ),
+                    actions: [
+                      TextButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        child: const Text('Close'),
                       ),
-                      actions: [
-                        TextButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                          child: const Text('Close'),
-                        ),
-                      ],
-                    );
-                  },
-                );
+                    ],
+                  );
+                },
+              );
+            },
+          ),
+        ],
+      ),
+
+      const SizedBox(height: 8),
+
+      Container(
+        padding: const EdgeInsets.all(14),
+        decoration: BoxDecoration(
+          color: const Color(0xFFEAF3FA),
+          borderRadius: BorderRadius.circular(16),
+        ),
+        child: Row(
+          children: [
+            const Expanded(
+              child: Column(
+                children: [
+                  Text(
+                    '1 x 5 hrs',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  SizedBox(height: 4),
+                  Text(
+                    'OR',
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Color(0xFF6C819B),
+                    ),
+                  ),
+                  SizedBox(height: 4),
+                  Text(
+                    '2 x 3 hrs',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+            Switch(
+              value: qualifyingLegLong,
+              onChanged: (value) {
+                setState(() {
+                  qualifyingLegLong = value;
+                });
               },
+            ),
+
+            const Expanded(
+              child: Column(
+                children: [
+                  Text(
+                    '1 x 6 hrs',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  SizedBox(height: 4),
+                  Text(
+                    'OR',
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Color(0xFF6C819B),
+                    ),
+                  ),
+                  SizedBox(height: 4),
+                  Text(
+                    '2 x 4 hrs',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ],
         ),
-
-        Container(
-          padding: const EdgeInsets.all(14),
-          decoration: BoxDecoration(
-            color: const Color(0xFFEAF3FA),
-            borderRadius: BorderRadius.circular(16),
-          ),
-          child: Row(
-            children: [
-              const Expanded(
-                child: Column(
-                  children: [
-                    Text(
-                      '1 x 5 hrs',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    Text('OR'),
-                    Text(
-                      '2 x 3 hrs',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-
-              Switch(
-                value: qualifyingLegLong,
-                onChanged: (value) {
-                  setState(() {
-                    qualifyingLegLong = value;
-                  });
-                },
-              ),
-
-              const Expanded(
-                child: Column(
-                  children: [
-                    Text(
-                      '1 x 6 hrs',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    Text('OR'),
-                    Text(
-                      '2 x 4 hrs',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
+      ),
+    ],
+  );
+}
 
   Widget buildShowTimeAdjustment() {
     return buildSliderSection(
@@ -587,9 +651,50 @@ class _HomeScreenState extends State<HomeScreen> {
     return SizedBox(
       height: 56,
       child: ElevatedButton(
-        onPressed: () {
-          // Connect calculator classes here next.
-        },
+      onPressed: () {
+        final zuluInput = zuluConstantController.text;
+
+        if (isAlertCalculator) {
+          final alertInput = earliestAlertController.text;
+
+          if (!isValidZuluTime(alertInput)) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text(
+                  'Enter a valid earliest alert time between 0000 and 2359.',
+                ),
+              ),
+            );
+            return;
+          }
+        } else {
+          final takeoffInput = takeoffController.text;
+
+          if (!isValidZuluTime(takeoffInput)) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text(
+                  'Enter a valid takeoff time between 0000 and 2359.',
+                ),
+              ),
+            );
+            return;
+          }
+        }
+
+        if (!isValidZuluConstant(zuluInput)) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text(
+                'Enter a Zulu Constant between -12 and +14.',
+              ),
+            ),
+          );
+          return;
+        }
+
+        // Run calculator here next.
+      },
         style: ElevatedButton.styleFrom(
           backgroundColor: const Color(0xFF1976D2),
           foregroundColor: Colors.white,
@@ -597,23 +702,31 @@ class _HomeScreenState extends State<HomeScreen> {
             borderRadius: BorderRadius.circular(16),
           ),
         ),
-        child: const Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              'Calculate',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
+        child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Text(
+            'Calculate',
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
             ),
-            SizedBox(width: 10),
-            Icon(Icons.arrow_forward),
-          ],
-        ),
+          ),
+          const SizedBox(width: 10),
+          SvgPicture.asset(
+            'assets/icons/forwardarrow.svg',
+            width: 30,
+            height: 30,
+            colorFilter: const ColorFilter.mode(
+              Colors.white,
+              BlendMode.srcIn,
+            ),
+          ),
+        ],
       ),
-    );
-  }
+    ),
+  );
+}
 
   Widget adjustmentButton({
     required IconData icon,
@@ -623,6 +736,14 @@ class _HomeScreenState extends State<HomeScreen> {
       onPressed: onPressed,
       icon: Icon(icon),
     );
+  }
+
+  @override
+  void dispose() {
+    takeoffController.dispose();
+    zuluConstantController.dispose();
+    earliestAlertController.dispose();
+    super.dispose();
   }
 }
 
