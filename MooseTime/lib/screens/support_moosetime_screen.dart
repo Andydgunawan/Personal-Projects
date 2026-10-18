@@ -53,7 +53,7 @@ class _SupportMooseTimeScreenState extends State<SupportMooseTimeScreen> {
     appBar: AppBar(
       title: Text('Support MooseTime'),
       backgroundColor: Theme.of(context).brightness == Brightness.dark
-          ? const Color(0xFF174529)
+          ? darkHeaderStart
           : const Color(0xFF0A2B5A),
       foregroundColor: Colors.white,
     ),
@@ -67,7 +67,7 @@ class _SupportMooseTimeScreenState extends State<SupportMooseTimeScreen> {
             style: TextStyle(
               fontSize: 16,
               height: 1.6,
-              color: appColor(context, 0xFF0A2B5A),
+              color: appTextColor(context, 0xFF0A2B5A),
             ),
           ),
           SizedBox(height: 24),
@@ -76,7 +76,7 @@ class _SupportMooseTimeScreenState extends State<SupportMooseTimeScreen> {
             style: TextStyle(
               fontSize: 21,
               fontWeight: FontWeight.bold,
-              color: appColor(context, 0xFF0A2B5A),
+              color: appTextColor(context, 0xFF0A2B5A),
             ),
           ),
           SizedBox(height: 16),
@@ -86,7 +86,7 @@ class _SupportMooseTimeScreenState extends State<SupportMooseTimeScreen> {
               style: TextStyle(
                 fontSize: 16,
                 height: 1.5,
-                color: appColor(context, 0xFF0A2B5A),
+                color: appTextColor(context, 0xFF0A2B5A),
               ),
             )
           else ...[
@@ -94,7 +94,7 @@ class _SupportMooseTimeScreenState extends State<SupportMooseTimeScreen> {
             if (_service.errorMessage != null) ...[
               Text(
                 _service.errorMessage!,
-                style: TextStyle(color: appColor(context, 0xFF0A2B5A)),
+                style: TextStyle(color: appTextColor(context, 0xFF0A2B5A)),
               ),
               TextButton.icon(
                 onPressed: _service.loading ? null : _service.initialize,
@@ -108,7 +108,7 @@ class _SupportMooseTimeScreenState extends State<SupportMooseTimeScreen> {
                 padding: EdgeInsets.only(bottom: 12),
                 child: Text(
                   'Some tip options are not available yet.',
-                  style: TextStyle(color: appColor(context, 0xFF0A2B5A)),
+                  style: TextStyle(color: appTextColor(context, 0xFF0A2B5A)),
                 ),
               ),
             for (final product in _service.products)
@@ -128,7 +128,7 @@ class _SupportMooseTimeScreenState extends State<SupportMooseTimeScreen> {
                         style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
-                          color: appColor(context, 0xFF0A2B5A),
+                          color: appTextColor(context, 0xFF0A2B5A),
                         ),
                       ),
                       if (product.title.isNotEmpty)
@@ -137,7 +137,7 @@ class _SupportMooseTimeScreenState extends State<SupportMooseTimeScreen> {
                           child: Text(
                             product.title,
                             style: TextStyle(
-                              color: appColor(context, 0xFF526780),
+                              color: appTextColor(context, 0xFF526780),
                             ),
                           ),
                         ),
@@ -164,7 +164,7 @@ class _SupportMooseTimeScreenState extends State<SupportMooseTimeScreen> {
                 padding: EdgeInsets.symmetric(vertical: 16),
                 child: Text(
                   'Waiting for the store to confirm your tip...',
-                  style: TextStyle(color: appColor(context, 0xFF0A2B5A)),
+                  style: TextStyle(color: appTextColor(context, 0xFF0A2B5A)),
                 ),
               ),
             if (_service.hasUnfinishedPurchases)
@@ -181,7 +181,7 @@ class _SupportMooseTimeScreenState extends State<SupportMooseTimeScreen> {
             style: TextStyle(
               fontSize: 16,
               height: 1.5,
-              color: appColor(context, 0xFF0A2B5A),
+              color: appTextColor(context, 0xFF0A2B5A),
             ),
           ),
         ],

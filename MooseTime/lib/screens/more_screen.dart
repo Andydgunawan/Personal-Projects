@@ -1,4 +1,5 @@
 import '../services/theme_service.dart';
+import '../services/offline_mode_service.dart';
 
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -41,7 +42,7 @@ class _MoreScreenState extends State<MoreScreen> {
     child: Text(
       text,
       style: TextStyle(
-        color: appColor(context, 0xFF0A2B5A),
+        color: appTextColor(context, 0xFF0A2B5A),
         fontWeight: FontWeight.bold,
         letterSpacing: 1,
       ),
@@ -56,7 +57,7 @@ class _MoreScreenState extends State<MoreScreen> {
       leading: Icon(icon, color: appColor(context, 0xFF0A2B5A)),
       title: Text(
         title,
-        style: TextStyle(color: appColor(context, 0xFF0A2B5A)),
+        style: TextStyle(color: appTextColor(context, 0xFF0A2B5A)),
       ),
       trailing: Icon(Icons.chevron_right, color: appColor(context, 0xFF0A2B5A)),
       onTap: () =>
@@ -65,6 +66,40 @@ class _MoreScreenState extends State<MoreScreen> {
     ),
   );
 
+  Widget _offlineSetting(BuildContext context) {
+    final service = OfflineModeScope.maybeOf(context);
+    return Card(
+      color: appColor(context, 0xFFFFFFFF),
+      elevation: 0,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+      child: SwitchListTile(
+        key: const ValueKey('offline-mode-switch'),
+        secondary: Icon(Icons.cloud_off, color: appColor(context, 0xFF0A2B5A)),
+        title: const Text('Offline Mode'),
+        subtitle: const Text(
+          'Disables online features such as announcements and feedback. Calculator functionality remains available.',
+        ),
+        value: service?.isOfflineMode ?? false,
+        onChanged: service == null || service.isSaving
+            ? null
+            : (value) async {
+                try {
+                  await service.setOfflineMode(value);
+                } catch (_) {
+                  if (!context.mounted) return;
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text(
+                        'Could not save Offline Mode. Please try again.',
+                      ),
+                    ),
+                  );
+                }
+              },
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) => Scaffold(
     backgroundColor: appColor(context, 0xFFF5F8FC),
@@ -72,7 +107,7 @@ class _MoreScreenState extends State<MoreScreen> {
       title: Text('More'),
       automaticallyImplyLeading: false,
       backgroundColor: Theme.of(context).brightness == Brightness.dark
-          ? const Color(0xFF174529)
+          ? darkHeaderStart
           : const Color(0xFF0A2B5A),
       foregroundColor: Colors.white,
     ),
@@ -80,6 +115,7 @@ class _MoreScreenState extends State<MoreScreen> {
       padding: const EdgeInsets.all(16),
       children: [
         _heading('APP'),
+        _offlineSetting(context),
         Card(
           color: appColor(context, 0xFFFFFFFF),
           elevation: 0,
@@ -92,7 +128,6 @@ class _MoreScreenState extends State<MoreScreen> {
               color: appColor(context, 0xFF0A2B5A),
             ),
             title: const Text('Dark mode'),
-            subtitle: const Text('Green and black appearance'),
             value: ThemeScope.maybeOf(context)?.isDark ?? false,
             onChanged: ThemeScope.maybeOf(context) == null
                 ? null
@@ -130,7 +165,7 @@ class _MoreScreenState extends State<MoreScreen> {
           'MooseTime',
           textAlign: TextAlign.center,
           style: TextStyle(
-            color: appColor(context, 0xFF0A2B5A),
+            color: appTextColor(context, 0xFF0A2B5A),
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -142,7 +177,7 @@ class _MoreScreenState extends State<MoreScreen> {
               ? 'Version unavailable'
               : 'Loading version...',
           textAlign: TextAlign.center,
-          style: TextStyle(color: appColor(context, 0xFF6C819B)),
+          style: TextStyle(color: appTextColor(context, 0xFF6C819B)),
         ),
         SizedBox(height: 16),
       ],

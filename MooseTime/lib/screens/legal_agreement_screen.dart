@@ -48,7 +48,10 @@ class _LegalAgreementScreenState extends State<LegalAgreementScreen> {
 
   Widget _document(String label, Widget page) => ListTile(
     contentPadding: const EdgeInsets.symmetric(horizontal: 16),
-    title: Text(label, style: TextStyle(color: appColor(context, 0xFF0A2B5A))),
+    title: Text(
+      label,
+      style: TextStyle(color: appTextColor(context, 0xFF0A2B5A)),
+    ),
     trailing: Icon(Icons.chevron_right, color: appColor(context, 0xFF0A2B5A)),
     onTap: () =>
         Navigator.of(context)
@@ -74,7 +77,7 @@ class _LegalAgreementScreenState extends State<LegalAgreementScreen> {
                     style: TextStyle(
                       fontSize: 30,
                       fontWeight: FontWeight.bold,
-                      color: appColor(context, 0xFF0A2B5A),
+                      color: appTextColor(context, 0xFF0A2B5A),
                     ),
                   ),
                   SizedBox(height: 16),
@@ -83,7 +86,7 @@ class _LegalAgreementScreenState extends State<LegalAgreementScreen> {
                     style: TextStyle(
                       fontSize: 16,
                       height: 1.5,
-                      color: appColor(context, 0xFF0A2B5A),
+                      color: appTextColor(context, 0xFF0A2B5A),
                     ),
                   ),
                   SizedBox(height: 24),
@@ -98,7 +101,7 @@ class _LegalAgreementScreenState extends State<LegalAgreementScreen> {
                       style: TextStyle(
                         fontSize: 16,
                         height: 1.5,
-                        color: appColor(context, 0xFF0A2B5A),
+                        color: appTextColor(context, 0xFF0A2B5A),
                       ),
                     ),
                   ),
@@ -108,7 +111,7 @@ class _LegalAgreementScreenState extends State<LegalAgreementScreen> {
                     style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
-                      color: appColor(context, 0xFF0A2B5A),
+                      color: appTextColor(context, 0xFF0A2B5A),
                     ),
                   ),
                   SizedBox(height: 12),
@@ -141,7 +144,7 @@ class _LegalAgreementScreenState extends State<LegalAgreementScreen> {
                       style: TextStyle(
                         fontSize: 16,
                         height: 1.5,
-                        color: appColor(context, 0xFF0A2B5A),
+                        color: appTextColor(context, 0xFF0A2B5A),
                       ),
                     ),
                   ),

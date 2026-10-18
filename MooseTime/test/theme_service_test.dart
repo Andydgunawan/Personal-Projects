@@ -26,7 +26,7 @@ void main() {
           animation: service,
           builder: (context, _) => MaterialApp(
             theme: ThemeData.light(),
-            darkTheme: ThemeData.dark(),
+            darkTheme: buildDarkTheme(),
             themeMode: service.isDark ? ThemeMode.dark : ThemeMode.light,
             home: RootScreen(announcementService: announcements),
           ),
@@ -36,7 +36,7 @@ void main() {
     await tester.enterText(find.byType(TextField).first, '1234');
     await tester.tap(find.text('More'));
     await tester.pumpAndSettle();
-    await tester.tap(find.byType(SwitchListTile));
+    await tester.tap(find.widgetWithText(SwitchListTile, 'Dark mode'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Calculator'));
     await tester.pumpAndSettle();
@@ -66,7 +66,7 @@ void main() {
           animation: service,
           builder: (context, _) => MaterialApp(
             theme: ThemeData.light(),
-            darkTheme: ThemeData.dark(),
+            darkTheme: buildDarkTheme(),
             themeMode: service.isDark ? ThemeMode.dark : ThemeMode.light,
             home: const MoreScreen(),
           ),
@@ -77,14 +77,14 @@ void main() {
       tester.getTopLeft(find.text('Dark mode')).dy,
       lessThan(tester.getTopLeft(find.text('About MooseTime')).dy),
     );
-    await tester.tap(find.byType(SwitchListTile));
+    await tester.tap(find.widgetWithText(SwitchListTile, 'Dark mode'));
     await tester.pumpAndSettle();
     expect(service.isDark, isTrue);
     expect(ThemeService(preferences).isDark, isTrue);
     final context = tester.element(find.byType(MoreScreen));
-    expect(appColor(context, 0xFFF5F8FC), const Color(0xFF090E0B));
-    expect(appColor(context, 0xFF0A2B5A), const Color(0xFF82D9A0));
-    await tester.tap(find.byType(SwitchListTile));
+    expect(appColor(context, 0xFFF5F8FC), darkBackground);
+    expect(appColor(context, 0xFF0A2B5A), darkAccent);
+    await tester.tap(find.widgetWithText(SwitchListTile, 'Dark mode'));
     await tester.pumpAndSettle();
     expect(ThemeService(preferences).isDark, isFalse);
     expect(appColor(context, 0xFFF5F8FC), const Color(0xFFF5F8FC));

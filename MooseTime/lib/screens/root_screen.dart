@@ -52,25 +52,36 @@ class _RootScreenState extends State<RootScreen> {
         selectedIndex: _selectedIndex,
         onDestinationSelected: (index) =>
             setState(() => _selectedIndex = index),
-        backgroundColor: appColor(context, 0xFFEAF3FA),
+        backgroundColor: isDarkTheme(context)
+            ? darkSurface
+            : const Color(0xFFEAF3FA),
         indicatorColor: appColor(context, 0xFFBFD9EF),
         destinations: [
           NavigationDestination(
             icon: Icon(
               Icons.calculate_outlined,
-              color: appColor(context, 0xFF0A2B5A),
+              color: isDarkTheme(context)
+                  ? (_selectedIndex == 0 ? darkAccent : darkMutedText)
+                  : const Color(0xFF0A2B5A),
             ),
             label: 'Calculator',
           ),
           NavigationDestination(
             icon: Icon(
               Icons.assignment_outlined,
-              color: appColor(context, 0xFF0A2B5A),
+              color: isDarkTheme(context)
+                  ? (_selectedIndex == 1 ? darkAccent : darkMutedText)
+                  : const Color(0xFF0A2B5A),
             ),
             label: 'Results',
           ),
           NavigationDestination(
-            icon: Icon(Icons.more_horiz, color: appColor(context, 0xFF0A2B5A)),
+            icon: Icon(
+              Icons.more_horiz,
+              color: isDarkTheme(context)
+                  ? (_selectedIndex == 2 ? darkAccent : darkMutedText)
+                  : const Color(0xFF0A2B5A),
+            ),
             label: 'More',
           ),
         ],
@@ -102,7 +113,7 @@ class _EmptyResults extends StatelessWidget {
               style: TextStyle(
                 fontSize: 22,
                 fontWeight: FontWeight.bold,
-                color: appColor(context, 0xFF0A2B5A),
+                color: appTextColor(context, 0xFF0A2B5A),
               ),
             ),
             SizedBox(height: 8),

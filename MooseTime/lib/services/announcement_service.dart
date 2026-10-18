@@ -3,10 +3,40 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../models/announcement.dart';
+import 'offline_mode_service.dart';
 
 class AnnouncementService extends ChangeNotifier {
-  AnnouncementService(this._preferences, {this.client, this.fetchRows}) {
+  AnnouncementService(
+    this._preferences, {
+    this.client,
+    this.fetchRows,
+    OfflineModeService? offlineMode,
+  }) : offlineMode = offlineMode ?? OfflineModeService(_preferences),
+       _ownsOfflineMode = offlineMode == null {
     _readIds.addAll(_preferences.getStringList(storageKey) ?? []);
+    this.offlineMode.addListener(_offlineModeChanged);
+  }
+
+  final OfflineModeService offlineMode;
+  final bool _ownsOfflineMode;
+  bool _disposed = false;
+  int _requestVersion = 0;
+
+  void _offlineModeChanged() {
+    // Ignore completions from requests started before this settings change.
+    _requestVersion++;
+    _refreshFuture = null;
+    isLoading = false;
+    errorMessage = null;
+    notifyListeners();
+  }
+
+  @override
+  void dispose() {
+    _disposed = true;
+    offlineMode.removeListener(_offlineModeChanged);
+    if (_ownsOfflineMode) offlineMode.dispose();
+    super.dispose();
   }
 
   static const storageKey = 'read_announcement_ids';
@@ -23,16 +53,20 @@ class AnnouncementService extends ChangeNotifier {
   Future<void> _readWrite = Future.value();
 
   Future<void> refresh() {
-    return _refreshFuture ??= _loadAnnouncements().whenComplete(() {
-      _refreshFuture = null;
+    if (_disposed || offlineMode.isOfflineMode) return Future.value();
+    if (_refreshFuture != null) return _refreshFuture!;
+    final version = ++_requestVersion;
+    return _refreshFuture = _loadAnnouncements(version).whenComplete(() {
+      if (version == _requestVersion) _refreshFuture = null;
     });
   }
 
-  Future<void> _loadAnnouncements() async {
+  Future<void> _loadAnnouncements(int version) async {
     isLoading = true;
     errorMessage = null;
     notifyListeners();
     try {
+      offlineMode.requireOnline();
       final rows =
           await (fetchRows != null
                   ? fetchRows!()
@@ -42,14 +76,26 @@ class AnnouncementService extends ChangeNotifier {
                         .eq('is_active', true)
                         .order('created_at', ascending: false))
               .timeout(const Duration(seconds: 15));
+      if (_disposed ||
+          version != _requestVersion ||
+          offlineMode.isOfflineMode) {
+        return;
+      }
       _announcements = rows.map(Announcement.fromJson).toList();
     } catch (_) {
+      if (_disposed ||
+          version != _requestVersion ||
+          offlineMode.isOfflineMode) {
+        return;
+      }
       // Keep both the last successful list and all locally saved read IDs.
       errorMessage =
           'Could not load announcements. Check your connection and try again.';
     } finally {
-      isLoading = false;
-      notifyListeners();
+      if (!_disposed && version == _requestVersion) {
+        isLoading = false;
+        notifyListeners();
+      }
     }
   }
 
@@ -80,4 +126,3 @@ class AnnouncementService extends ChangeNotifier {
     notifyListeners();
   }
 }
-

@@ -22,7 +22,7 @@ class AboutCreatorScreen extends StatelessWidget {
           style: TextStyle(
             fontSize: 21,
             fontWeight: FontWeight.bold,
-            color: appColor(context, 0xFF0A2B5A),
+            color: appTextColor(context, 0xFF0A2B5A),
           ),
         ),
         SizedBox(height: 12),
@@ -31,7 +31,7 @@ class AboutCreatorScreen extends StatelessWidget {
           style: TextStyle(
             fontSize: 16,
             height: 1.6,
-            color: appColor(context, 0xFF0A2B5A),
+            color: appTextColor(context, 0xFF0A2B5A),
           ),
         ),
       ],
@@ -72,7 +72,7 @@ class AboutCreatorScreen extends StatelessWidget {
     appBar: AppBar(
       title: Text('About the Creator'),
       backgroundColor: Theme.of(context).brightness == Brightness.dark
-          ? const Color(0xFF174529)
+          ? darkHeaderStart
           : const Color(0xFF0A2B5A),
       foregroundColor: Colors.white,
     ),
@@ -110,7 +110,7 @@ class AboutCreatorScreen extends StatelessWidget {
                                 Text(
                                   'Creator photo coming soon',
                                   style: TextStyle(
-                                    color: appColor(context, 0xFF0A2B5A),
+                                    color: appTextColor(context, 0xFF0A2B5A),
                                   ),
                                 ),
                               ],
@@ -127,7 +127,7 @@ class AboutCreatorScreen extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 28,
                     fontWeight: FontWeight.bold,
-                    color: appColor(context, 0xFF0A2B5A),
+                    color: appTextColor(context, 0xFF0A2B5A),
                   ),
                 ),
                 SizedBox(height: 12),
@@ -136,13 +136,13 @@ class AboutCreatorScreen extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 16,
                     height: 1.6,
-                    color: appColor(context, 0xFF0A2B5A),
+                    color: appTextColor(context, 0xFF0A2B5A),
                   ),
                 ),
                 _section(
                   context,
                   "Inspiration",
-                  "MooseTime was inspired by my close friend and AC, Captain Ronald Ramsaran. Without him, I would never have had the idea to create MooseTime.\n\nThe app came out of a conversation I was having with Ronald where he showed me another app that functionally did the same thing as MooseTime. However, that app had several noticeable problems, including a difficult and frustrating UI, broken input, and missing features that Ronald wished it had.\n\nOn a whim, I told him, \"I think I could build a better app for you,\" and that was how this project began.",
+                  "MooseTime was inspired by my close friend and AC, Captain Ronald Ramsaran. Without him, I would never have had the idea to create the app. \n\nThe project began after Ronald showed me another tool used for similar mission-planning calculations and walked me through how he used it in practice. As we talked, he pointed out several features he wished were easier to use or more accessible, which gave me the idea to create my own version with a cleaner interface and additional functionality.\n\nOn a whim, I told him, “I think I could build a better app for you,” and that's how the project began."
                 ),
                 _section(
                   context,
@@ -193,7 +193,7 @@ class AboutCreatorScreen extends StatelessWidget {
                       icon: Icon(Icons.code),
                       label: Text('GitHub'),
                       style: OutlinedButton.styleFrom(
-                        foregroundColor: appColor(context, 0xFF0A2B5A),
+                        foregroundColor: appTextColor(context, 0xFF0A2B5A),
                       ),
                     ),
                     OutlinedButton.icon(
@@ -202,7 +202,7 @@ class AboutCreatorScreen extends StatelessWidget {
                       icon: Icon(Icons.business_outlined),
                       label: Text('LinkedIn'),
                       style: OutlinedButton.styleFrom(
-                        foregroundColor: appColor(context, 0xFF0A2B5A),
+                        foregroundColor: appTextColor(context, 0xFF0A2B5A),
                       ),
                     ),
                   ],

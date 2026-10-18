@@ -22,7 +22,7 @@ class InformationScreen extends StatelessWidget {
     appBar: AppBar(
       title: Text(title),
       backgroundColor: Theme.of(context).brightness == Brightness.dark
-          ? const Color(0xFF174529)
+          ? darkHeaderStart
           : const Color(0xFF0A2B5A),
       foregroundColor: Colors.white,
     ),
@@ -36,7 +36,7 @@ class InformationScreen extends StatelessWidget {
               'DRAFT ? Review and revise before release.',
               style: TextStyle(
                 fontWeight: FontWeight.bold,
-                color: appColor(context, 0xFF0A2B5A),
+                color: appTextColor(context, 0xFF0A2B5A),
               ),
             ),
           ),
@@ -48,7 +48,7 @@ class InformationScreen extends StatelessWidget {
               style: TextStyle(
                 fontSize: 16,
                 height: 1.5,
-                color: appColor(context, 0xFF0A2B5A),
+                color: appTextColor(context, 0xFF0A2B5A),
               ),
             ),
           ),

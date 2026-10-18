@@ -234,7 +234,7 @@ class _ResultsScreenState extends State<ResultsScreen> {
           backgroundColor: appColor(context, 0xFFF5F8FC),
           title: Text(
             'Customize visible times',
-            style: TextStyle(color: appColor(context, 0xFF0A2B5A)),
+            style: TextStyle(color: appTextColor(context, 0xFF0A2B5A)),
           ),
           content: SizedBox(
             width: 360,
@@ -316,7 +316,7 @@ class _ResultsScreenState extends State<ResultsScreen> {
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
-                    color: appColor(context, 0xFF0A2B5A),
+                    color: appTextColor(context, 0xFF0A2B5A),
                   ),
                 ),
               ),
@@ -414,12 +414,11 @@ class _ResultsScreenState extends State<ResultsScreen> {
                     padding: const EdgeInsets.fromLTRB(8, 22, 20, 28),
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
-                        colors: [
-                          Theme.of(context).brightness == Brightness.dark
-                              ? const Color(0xFF174529)
-                              : const Color(0xFF0A2B5A),
-                          appColor(context, 0xFF527D9E),
-                        ],
+                        colors: appHeaderColors(
+                          context,
+                          0xFF0A2B5A,
+                          0xFF527D9E,
+                        ),
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
                       ),
@@ -571,7 +570,10 @@ class _ResultsScreenState extends State<ResultsScreen> {
                                     child: Text(
                                       'All times shown in Zulu (Z) and $localLabel.\nDay badges show days before (-1) or after (+1, +2) the mission date in each column.',
                                       style: TextStyle(
-                                        color: appColor(context, 0xFF1976D2),
+                                        color: appTextColor(
+                                          context,
+                                          0xFF1976D2,
+                                        ),
                                         fontSize: 12,
                                       ),
                                     ),
@@ -603,7 +605,7 @@ class _ResultsScreenState extends State<ResultsScreen> {
           Text(
             label,
             style: TextStyle(
-              color: appColor(context, 0xFF0A2B5A),
+              color: appTextColor(context, 0xFF0A2B5A),
               fontSize: 11,
             ),
           ),
@@ -611,7 +613,7 @@ class _ResultsScreenState extends State<ResultsScreen> {
             value,
             textAlign: TextAlign.center,
             style: TextStyle(
-              color: appColor(context, 0xFF0A2B5A),
+              color: appTextColor(context, 0xFF0A2B5A),
               fontWeight: FontWeight.bold,
               fontSize: 14,
             ),
@@ -637,7 +639,9 @@ class _ResultsScreenState extends State<ResultsScreen> {
               child: Text(
                 section.title,
                 style: TextStyle(
-                  color: appColor(context, 0xFF0A2B5A),
+                  color: isDarkTheme(context)
+                      ? darkAccent
+                      : appTextColor(context, 0xFF0A2B5A),
                   fontSize: 19,
                   fontWeight: FontWeight.bold,
                 ),
@@ -649,7 +653,7 @@ class _ResultsScreenState extends State<ResultsScreen> {
                 'Zulu (Z)',
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  color: appColor(context, 0xFF1976D2),
+                  color: appTextColor(context, 0xFF1976D2),
                   fontSize: 11,
                 ),
               ),
@@ -660,7 +664,7 @@ class _ResultsScreenState extends State<ResultsScreen> {
                 localLabel,
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  color: appColor(context, 0xFF1976D2),
+                  color: appTextColor(context, 0xFF1976D2),
                   fontSize: 11,
                 ),
               ),
@@ -702,7 +706,7 @@ class _ResultsScreenState extends State<ResultsScreen> {
                       Text(
                         row.title,
                         style: TextStyle(
-                          color: appColor(context, 0xFF0A2B5A),
+                          color: appTextColor(context, 0xFF0A2B5A),
                           fontWeight: FontWeight.bold,
                           fontSize: 13,
                         ),
@@ -710,7 +714,7 @@ class _ResultsScreenState extends State<ResultsScreen> {
                       Text(
                         row.formula,
                         style: TextStyle(
-                          color: appColor(context, 0xFF1976D2),
+                          color: appTextColor(context, 0xFF1976D2),
                           fontSize: 11,
                         ),
                       ),
@@ -719,7 +723,17 @@ class _ResultsScreenState extends State<ResultsScreen> {
                 ),
                 Expanded(
                   flex: 3,
-                  child: timeCell(row.time, zuluTime, row.highlight),
+                  child: timeCell(
+                    row.time,
+                    zuluTime,
+                    row.highlight,
+                    highlightColor: isDarkTheme(context)
+                        ? null
+                        : _missionTimeHighlight(row.title),
+                    highlightBorderColor: isDarkTheme(context)
+                        ? _missionTimeHighlight(row.title)
+                        : null,
+                  ),
                 ),
                 Expanded(
                   flex: 3,
@@ -727,6 +741,12 @@ class _ResultsScreenState extends State<ResultsScreen> {
                     row.time.subtract(Duration(hours: zuluConstant)),
                     zuluTime.subtract(Duration(hours: zuluConstant)),
                     false,
+                    highlightColor: isDarkTheme(context)
+                        ? null
+                        : _missionTimeHighlight(row.title),
+                    highlightBorderColor: isDarkTheme(context)
+                        ? _missionTimeHighlight(row.title)
+                        : null,
                   ),
                 ),
               ],
@@ -735,7 +755,23 @@ class _ResultsScreenState extends State<ResultsScreen> {
       ],
     ),
   );
-  Widget timeCell(DateTime time, DateTime reference, bool highlight) {
+  Color? _missionTimeHighlight(String title) => switch (title) {
+    'Alert' =>
+      isDarkTheme(context) ? const Color(0xFFE05A64) : const Color(0xFFF5C2C7),
+    'Show' =>
+      isDarkTheme(context) ? const Color(0xFF4FA3E3) : const Color(0xFFC2DDF2),
+    'Takeoff' =>
+      isDarkTheme(context) ? const Color(0xFFD2AD00) : const Color(0xFFFFF09A),
+    _ => null,
+  };
+
+  Widget timeCell(
+    DateTime time,
+    DateTime reference,
+    bool highlight, {
+    Color? highlightColor,
+    Color? highlightBorderColor,
+  }) {
     final days = DateTime.utc(time.year, time.month, time.day)
         .difference(
           DateTime.utc(reference.year, reference.month, reference.day),
@@ -747,9 +783,18 @@ class _ResultsScreenState extends State<ResultsScreen> {
       margin: const EdgeInsets.only(left: 4),
       padding: const EdgeInsets.symmetric(vertical: 9, horizontal: 2),
       decoration: BoxDecoration(
-        color: highlight
-            ? appColor(context, 0xFFFFF2A0)
-            : appColor(context, 0xFFEAF4FF),
+        color:
+            highlightColor ??
+            (isDarkTheme(context)
+                ? darkElevatedSurface
+                : highlight
+                ? const Color(0xFFFFF2A0)
+                : const Color(0xFFEAF4FF)),
+        border: highlightBorderColor != null
+            ? Border.all(color: highlightBorderColor, width: 1.5)
+            : isDarkTheme(context) && highlight
+            ? Border.all(color: darkHighlight)
+            : null,
         borderRadius: BorderRadius.circular(7),
       ),
       child: Wrap(
@@ -761,7 +806,7 @@ class _ResultsScreenState extends State<ResultsScreen> {
           Text(
             formatted,
             style: TextStyle(
-              color: appColor(context, 0xFF0A2B5A),
+              color: appTextColor(context, 0xFF0A2B5A),
               fontSize: 14,
               fontWeight: highlight ? FontWeight.bold : FontWeight.w500,
             ),
@@ -770,7 +815,9 @@ class _ResultsScreenState extends State<ResultsScreen> {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 2),
               decoration: BoxDecoration(
-                color: appColor(context, 0xFF1976D2),
+                color: isDarkTheme(context)
+                    ? darkBadge
+                    : const Color(0xFF1976D2),
                 borderRadius: BorderRadius.circular(6),
               ),
               child: Text(

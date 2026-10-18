@@ -35,7 +35,7 @@ class PrivacyScreen extends StatelessWidget {
               fontSize: subsection ? 18 : 20,
               height: 1.3,
               fontWeight: FontWeight.bold,
-              color: appColor(context, 0xFF0A2B5A),
+              color: appTextColor(context, 0xFF0A2B5A),
             ),
           ),
           SizedBox(height: 12),
@@ -50,12 +50,12 @@ class PrivacyScreen extends StatelessWidget {
                     child: TextButton(
                       onPressed: onLinkTap,
                       style: TextButton.styleFrom(
-                        foregroundColor: appColor(context, 0xFF1976D2),
+                        foregroundColor: appTextColor(context, 0xFF1976D2),
                         padding: const EdgeInsets.symmetric(horizontal: 2),
                         textStyle: TextStyle(
                           fontSize: 16,
                           height: 1.6,
-                          color: appColor(context, 0xFF0A2B5A),
+                          color: appTextColor(context, 0xFF0A2B5A),
                         ).copyWith(decoration: TextDecoration.underline),
                       ),
                       child: Text(linkLabel!),
@@ -68,7 +68,7 @@ class PrivacyScreen extends StatelessWidget {
             style: TextStyle(
               fontSize: 16,
               height: 1.6,
-              color: appColor(context, 0xFF0A2B5A),
+              color: appTextColor(context, 0xFF0A2B5A),
             ),
           ),
         ],
@@ -103,7 +103,7 @@ class PrivacyScreen extends StatelessWidget {
     appBar: AppBar(
       title: Text('Privacy Policy'),
       backgroundColor: Theme.of(context).brightness == Brightness.dark
-          ? const Color(0xFF174529)
+          ? darkHeaderStart
           : const Color(0xFF0A2B5A),
       foregroundColor: Colors.white,
     ),
@@ -120,7 +120,7 @@ class PrivacyScreen extends StatelessWidget {
                   'Last updated: $privacyLastUpdated',
                   style: TextStyle(
                     fontSize: 14,
-                    color: appColor(context, 0xFF6C819B),
+                    color: appTextColor(context, 0xFF6C819B),
                   ),
                 ),
                 _section(
@@ -230,7 +230,7 @@ class PrivacyScreen extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 14,
                       height: 1.5,
-                      color: appColor(context, 0xFF0A2B5A),
+                      color: appTextColor(context, 0xFF0A2B5A),
                     ),
                   ),
                 ),

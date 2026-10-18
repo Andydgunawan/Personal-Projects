@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'services/theme_service.dart';
+import 'services/offline_mode_service.dart';
 
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:flutter/material.dart';
@@ -17,13 +18,15 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  final preferences = await SharedPreferences.getInstance();
+  final offlineMode = OfflineModeService(preferences);
   await Supabase.initialize(
     url: 'https://npotmylpbbzloczodxuz.supabase.co',
+    httpClient: OfflineHttpClient(offlineMode),
     // The supplied publishable key uses the requested anonKey parameter.
     // ignore: deprecated_member_use
     anonKey: 'sb_publishable_Ddi5Xp76qPjWY2vN0uRqNQ_Wo4dCWDI',
   );
-  final preferences = await SharedPreferences.getInstance();
   final legalService = LegalAgreementService(preferences);
   // Debug-only first-launch helper for terms and announcement read history.
   if (kDebugMode && const bool.fromEnvironment('RESET_LEGAL_AGREEMENT')) {
@@ -36,11 +39,14 @@ Future<void> main() async {
   final announcements = AnnouncementService(
     preferences,
     client: Supabase.instance.client,
+    offlineMode: offlineMode,
   );
   // Listen early for unfinished mobile tips without blocking app startup.
-  unawaited(InAppPurchaseService.instance.initialize());
+  if (!offlineMode.isOfflineMode) {
+    unawaited(InAppPurchaseService.instance.initialize());
+  }
   // Start fetching without delaying the Calculator screen on network access.
-  unawaited(announcements.refresh());
+  if (!offlineMode.isOfflineMode) unawaited(announcements.refresh());
   runApp(
     MooseTimeApp(
       announcementService: announcements,
@@ -70,15 +76,7 @@ class MooseTimeApp extends StatelessWidget {
         title: 'MooseTime',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(useMaterial3: true),
-        darkTheme: ThemeData(
-          useMaterial3: true,
-          colorScheme: ColorScheme.fromSeed(
-            seedColor: const Color(0xFF238B50),
-            brightness: Brightness.dark,
-            surface: const Color(0xFF131D17),
-          ),
-          scaffoldBackgroundColor: const Color(0xFF090E0B),
-        ),
+        darkTheme: buildDarkTheme(),
         themeMode: themeService?.isDark == true
             ? ThemeMode.dark
             : ThemeMode.light,
@@ -88,8 +86,11 @@ class MooseTimeApp extends StatelessWidget {
         ),
       ),
     );
-    return themeService == null
-        ? app
-        : ThemeScope(service: themeService!, child: app);
+    return OfflineModeScope(
+      service: announcementService.offlineMode,
+      child: themeService == null
+          ? app
+          : ThemeScope(service: themeService!, child: app),
+    );
   }
 }

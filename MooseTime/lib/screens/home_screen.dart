@@ -199,7 +199,9 @@ class _HomeScreenState extends State<HomeScreen> {
           icon: Badge(
             isLabelVisible: unread > 0,
             label: Text('$unread'),
-            backgroundColor: appColor(context, 0xFF1976D2),
+            backgroundColor: isDarkTheme(context)
+                ? darkBadge
+                : const Color(0xFF1976D2),
             child: Icon(
               Icons.notifications_outlined,
               color: appColor(context, 0xFF0A2B5A),
@@ -217,10 +219,7 @@ class _HomeScreenState extends State<HomeScreen> {
       padding: const EdgeInsets.fromLTRB(24, 24, 24, 28),
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: [
-            appColor(context, 0xFFEAF3FA),
-            appColor(context, 0xFFDDEAF5),
-          ],
+          colors: appHeaderColors(context, 0xFFEAF3FA, 0xFFDDEAF5),
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
         ),
@@ -237,7 +236,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   style: TextStyle(
                     fontSize: 34,
                     fontWeight: FontWeight.bold,
-                    color: appColor(context, 0xFF0A2B5A),
+                    color: appTextColor(context, 0xFF0A2B5A),
                     height: 1.0,
                   ),
                 ),
@@ -251,7 +250,7 @@ class _HomeScreenState extends State<HomeScreen> {
             style: TextStyle(
               fontSize: 13,
               letterSpacing: 0.8,
-              color: appColor(context, 0xFF6C819B),
+              color: appTextColor(context, 0xFF6C819B),
             ),
           ),
         ],
@@ -319,6 +318,9 @@ class _HomeScreenState extends State<HomeScreen> {
     if (mode == 'Airdrop Basic' || mode == 'Airdrop Augmented') {
       return SvgPicture.asset(
         'assets/icons/parachute_cargo.svg',
+        colorFilter: Theme.of(context).brightness == Brightness.dark
+            ? ColorFilter.mode(appColor(context, 0xFF0A2B5A), BlendMode.srcIn)
+            : null,
         width: 22,
         height: 22,
       );
@@ -397,6 +399,12 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 SvgPicture.asset(
                   'assets/icons/calendar.svg',
+                  colorFilter: Theme.of(context).brightness == Brightness.dark
+                      ? ColorFilter.mode(
+                          appColor(context, 0xFF0A2B5A),
+                          BlendMode.srcIn,
+                        )
+                      : null,
                   width: 24,
                   height: 24,
                 ),
@@ -438,6 +446,12 @@ class _HomeScreenState extends State<HomeScreen> {
               padding: const EdgeInsets.all(14),
               child: SvgPicture.asset(
                 'assets/icons/clock.svg',
+                colorFilter: Theme.of(context).brightness == Brightness.dark
+                    ? ColorFilter.mode(
+                        appColor(context, 0xFF0A2B5A),
+                        BlendMode.srcIn,
+                      )
+                    : null,
                 width: 20,
                 height: 20,
               ),
@@ -479,6 +493,12 @@ class _HomeScreenState extends State<HomeScreen> {
               padding: const EdgeInsets.all(14),
               child: SvgPicture.asset(
                 'assets/icons/clock.svg',
+                colorFilter: Theme.of(context).brightness == Brightness.dark
+                    ? ColorFilter.mode(
+                        appColor(context, 0xFF0A2B5A),
+                        BlendMode.srcIn,
+                      )
+                    : null,
                 width: 20,
                 height: 20,
               ),
@@ -537,6 +557,12 @@ class _HomeScreenState extends State<HomeScreen> {
             IconButton(
               icon: SvgPicture.asset(
                 'assets/icons/info.svg',
+                colorFilter: Theme.of(context).brightness == Brightness.dark
+                    ? ColorFilter.mode(
+                        appColor(context, 0xFF0A2B5A),
+                        BlendMode.srcIn,
+                      )
+                    : null,
                 width: 20,
                 height: 20,
               ),
@@ -590,7 +616,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       'OR',
                       style: TextStyle(
                         fontSize: 12,
-                        color: appColor(context, 0xFF6C819B),
+                        color: appTextColor(context, 0xFF6C819B),
                       ),
                     ),
                     SizedBox(height: 4),
@@ -606,6 +632,23 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
 
               Switch(
+                thumbColor: isDarkTheme(context)
+                    ? const WidgetStatePropertyAll(darkAccent)
+                    : null,
+                trackColor: isDarkTheme(context)
+                    ? WidgetStateProperty.resolveWith(
+                        (states) => states.contains(WidgetState.selected)
+                            ? darkAccentFill
+                            : darkSurface,
+                      )
+                    : null,
+                trackOutlineColor: isDarkTheme(context)
+                    ? WidgetStateProperty.resolveWith(
+                        (states) => states.contains(WidgetState.selected)
+                            ? darkAccent
+                            : darkSecondaryText,
+                      )
+                    : null,
                 value: qualifyingLegLong,
                 onChanged: (value) {
                   setState(() {
@@ -629,7 +672,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       'OR',
                       style: TextStyle(
                         fontSize: 12,
-                        color: appColor(context, 0xFF6C819B),
+                        color: appTextColor(context, 0xFF6C819B),
                       ),
                     ),
                     SizedBox(height: 4),
@@ -706,6 +749,7 @@ class _HomeScreenState extends State<HomeScreen> {
     required ValueChanged<double> onChanged,
     required TextEditingController controller,
     String unit = 'min',
+    int? divisions,
   }) {
     void updateText(int minutes) {
       final text = minutes.toString();
@@ -749,7 +793,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 value: value,
                 min: min,
                 max: max,
-                divisions: (max - min).toInt(),
+                divisions: divisions,
                 onChanged: (newValue) {
                   final minutes = newValue.round();
                   updateText(minutes);
@@ -944,11 +988,11 @@ class _HomeScreenState extends State<HomeScreen> {
 TextStyle sectionTitleStyle(BuildContext context) => TextStyle(
   fontSize: 17,
   fontWeight: FontWeight.bold,
-  color: appColor(context, 0xFF0A2B5A),
+  color: appTextColor(context, 0xFF0A2B5A),
 );
 
 TextStyle helperStyle(BuildContext context) =>
-    TextStyle(fontSize: 12, color: appColor(context, 0xFF6C819B));
+    TextStyle(fontSize: 12, color: appTextColor(context, 0xFF6C819B));
 
 InputDecoration inputDecoration(BuildContext context) {
   return InputDecoration(

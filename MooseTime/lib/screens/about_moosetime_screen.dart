@@ -36,7 +36,7 @@ class AboutMooseTimeScreen extends StatelessWidget {
           style: TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.bold,
-            color: appColor(context, 0xFF0A2B5A),
+            color: appTextColor(context, 0xFF0A2B5A),
           ),
         ),
         SizedBox(height: 12),
@@ -65,7 +65,7 @@ class AboutMooseTimeScreen extends StatelessWidget {
                           feature,
                           style: TextStyle(
                             fontSize: 16,
-                            color: appColor(context, 0xFF0A2B5A),
+                            color: appTextColor(context, 0xFF0A2B5A),
                           ),
                         ),
                       ),
@@ -92,13 +92,13 @@ class AboutMooseTimeScreen extends StatelessWidget {
             title: Text(
               'Important usage information',
               style: TextStyle(
-                color: appColor(context, 0xFF0A2B5A),
+                color: appTextColor(context, 0xFF0A2B5A),
                 fontWeight: FontWeight.w600,
               ),
             ),
             subtitle: Text(
               'See Disclaimer',
-              style: TextStyle(color: appColor(context, 0xFF1976D2)),
+              style: TextStyle(color: appTextColor(context, 0xFF1976D2)),
             ),
             trailing: Icon(
               Icons.chevron_right,
