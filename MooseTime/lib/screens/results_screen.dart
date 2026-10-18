@@ -1,3 +1,5 @@
+import '../services/theme_service.dart';
+
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
@@ -53,7 +55,6 @@ class _ResultsScreenState extends State<ResultsScreen> {
   ResultExportService get _exportService =>
       widget.exportService ?? ResultExportService();
 
-  static const navy = Color(0xFF0A2B5A), blue = Color(0xFF1976D2);
   String get localLabel => zuluConstant == 0
       ? 'Local (Z)'
       : 'Local (Z ${zuluConstant > 0 ? '-' : '+'} ${zuluConstant.abs()})';
@@ -178,13 +179,13 @@ class _ResultsScreenState extends State<ResultsScreen> {
             '3 Stops Left',
             'Show + 14:00',
             Icons.share,
-            show.add(const Duration(hours: 14)),
+            show.add(Duration(hours: 14)),
           ),
           _Row(
             '2 AC for AR',
             'Show + 14:00',
             Icons.build,
-            show.add(const Duration(hours: 14)),
+            show.add(Duration(hours: 14)),
           ),
         ],
         _Row(
@@ -206,13 +207,13 @@ class _ResultsScreenState extends State<ResultsScreen> {
           'Latest Alert',
           'Expected alert + 6:00',
           Icons.notifications,
-          alert.add(const Duration(hours: 6)),
+          alert.add(Duration(hours: 6)),
         ),
         _Row(
           'With AC Approval',
           'Expected alert + 8:00',
           Icons.check_circle,
-          alert.add(const Duration(hours: 8)),
+          alert.add(Duration(hours: 8)),
         ),
         _Row(
           'AP Inop FDP',
@@ -230,10 +231,10 @@ class _ResultsScreenState extends State<ResultsScreen> {
       context: context,
       builder: (context) => StatefulBuilder(
         builder: (context, updateDialog) => AlertDialog(
-          backgroundColor: const Color(0xFFF5F8FC),
-          title: const Text(
+          backgroundColor: appColor(context, 0xFFF5F8FC),
+          title: Text(
             'Customize visible times',
-            style: TextStyle(color: navy),
+            style: TextStyle(color: appColor(context, 0xFF0A2B5A)),
           ),
           content: SizedBox(
             width: 360,
@@ -245,7 +246,7 @@ class _ResultsScreenState extends State<ResultsScreen> {
                     CheckboxListTile(
                       title: Text(row.title),
                       value: !_hiddenRows.contains(row.title),
-                      activeColor: blue,
+                      activeColor: appColor(context, 0xFF1976D2),
                       controlAffinity: ListTileControlAffinity.leading,
                       onChanged: (visible) {
                         setState(() {
@@ -268,11 +269,11 @@ class _ResultsScreenState extends State<ResultsScreen> {
                 setState(_hiddenRows.clear);
                 updateDialog(() {});
               },
-              child: const Text('Show All'),
+              child: Text('Show All'),
             ),
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Done'),
+              child: Text('Done'),
             ),
           ],
         ),
@@ -303,43 +304,47 @@ class _ResultsScreenState extends State<ResultsScreen> {
           '${date}_${mode.replaceAll(' ', '-')}_ZuluConversion$conversion.png';
       final action = await showModalBottomSheet<_ExportAction>(
         context: context,
-        backgroundColor: const Color(0xFFF5F8FC),
+        backgroundColor: appColor(context, 0xFFF5F8FC),
         builder: (context) => SafeArea(
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Padding(
+              Padding(
                 padding: EdgeInsets.all(16),
                 child: Text(
                   'Export result',
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
-                    color: navy,
+                    color: appColor(context, 0xFF0A2B5A),
                   ),
                 ),
               ),
               ListTile(
-                leading: const Icon(Icons.save_alt, color: navy),
-                title: const Text('Save as Image'),
-                subtitle: const Text(
-                  'Mobile uses the system share/save sheet.',
+                leading: Icon(
+                  Icons.save_alt,
+                  color: appColor(context, 0xFF0A2B5A),
                 ),
+                title: Text('Save as Image'),
+                subtitle: Text('Mobile uses the system share/save sheet.'),
                 onTap: () => Navigator.pop(context, _ExportAction.save),
               ),
               ListTile(
-                leading: const Icon(Icons.copy, color: navy),
-                title: const Text('Copy Image to Clipboard'),
+                leading: Icon(Icons.copy, color: appColor(context, 0xFF0A2B5A)),
+                title: Text('Copy Image to Clipboard'),
                 subtitle: service.supportsImageClipboard
                     ? null
-                    : const Text(
+                    : Text(
                         'Image clipboard unavailable here; saves a PNG instead.',
                       ),
                 onTap: () => Navigator.pop(context, _ExportAction.copy),
               ),
               ListTile(
-                leading: const Icon(Icons.share, color: navy),
-                title: const Text('Share'),
+                leading: Icon(
+                  Icons.share,
+                  color: appColor(context, 0xFF0A2B5A),
+                ),
+                title: Text('Share'),
                 onTap: () => Navigator.pop(context, _ExportAction.share),
               ),
             ],
@@ -397,19 +402,24 @@ class _ResultsScreenState extends State<ResultsScreen> {
       'Dec',
     ];
     return Scaffold(
-      backgroundColor: const Color(0xFFE7F2FC),
+      backgroundColor: appColor(context, 0xFFE7F2FC),
       body: SafeArea(
         child: Center(
           child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 720),
+            constraints: BoxConstraints(maxWidth: 720),
             child: SingleChildScrollView(
               child: Column(
                 children: [
                   Container(
                     padding: const EdgeInsets.fromLTRB(8, 22, 20, 28),
-                    decoration: const BoxDecoration(
+                    decoration: BoxDecoration(
                       gradient: LinearGradient(
-                        colors: [navy, Color(0xFF527D9E)],
+                        colors: [
+                          Theme.of(context).brightness == Brightness.dark
+                              ? const Color(0xFF174529)
+                              : const Color(0xFF0A2B5A),
+                          appColor(context, 0xFF527D9E),
+                        ],
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
                       ),
@@ -420,17 +430,14 @@ class _ResultsScreenState extends State<ResultsScreen> {
                           IconButton(
                             onPressed: () => Navigator.maybePop(context),
                             tooltip: 'Back',
-                            icon: const Icon(
-                              Icons.arrow_back,
-                              color: Colors.white,
-                            ),
+                            icon: Icon(Icons.arrow_back, color: Colors.white),
                           ),
-                        const SizedBox(width: 8),
+                        SizedBox(width: 8),
                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const Text(
+                              Text(
                                 'Results',
                                 style: TextStyle(
                                   fontSize: 32,
@@ -440,7 +447,7 @@ class _ResultsScreenState extends State<ResultsScreen> {
                               ),
                               Text(
                                 mode,
-                                style: const TextStyle(
+                                style: TextStyle(
                                   fontSize: 16,
                                   color: Colors.white,
                                 ),
@@ -449,7 +456,7 @@ class _ResultsScreenState extends State<ResultsScreen> {
                           ),
                         ),
                         if (_exporting)
-                          const Padding(
+                          Padding(
                             padding: EdgeInsets.all(12),
                             child: SizedBox(
                               width: 20,
@@ -463,7 +470,7 @@ class _ResultsScreenState extends State<ResultsScreen> {
                         else
                           PopupMenuButton<String>(
                             tooltip: 'Results options',
-                            icon: const Icon(
+                            icon: Icon(
                               Icons.more_vert,
                               size: 34,
                               color: Colors.white,
@@ -477,13 +484,12 @@ class _ResultsScreenState extends State<ResultsScreen> {
                                 case 'feedback':
                                   Navigator.of(context).push<void>(
                                     MaterialPageRoute(
-                                      builder: (context) =>
-                                          const FeedbackScreen(),
+                                      builder: (context) => FeedbackScreen(),
                                     ),
                                   );
                               }
                             },
-                            itemBuilder: (context) => const [
+                            itemBuilder: (context) => [
                               PopupMenuItem(
                                 value: 'customize',
                                 child: Text('Customize visible times'),
@@ -504,7 +510,7 @@ class _ResultsScreenState extends State<ResultsScreen> {
                   RepaintBoundary(
                     key: _exportKey,
                     child: ColoredBox(
-                      color: const Color(0xFFE7F2FC),
+                      color: appColor(context, 0xFFE7F2FC),
                       child: Padding(
                         padding: const EdgeInsets.all(12),
                         child: Column(
@@ -515,7 +521,7 @@ class _ResultsScreenState extends State<ResultsScreen> {
                                 horizontal: 8,
                               ),
                               decoration: BoxDecoration(
-                                color: const Color(0xFFDDEEFF),
+                                color: appColor(context, 0xFFDDEEFF),
                                 borderRadius: BorderRadius.circular(16),
                               ),
                               child: Row(
@@ -544,7 +550,7 @@ class _ResultsScreenState extends State<ResultsScreen> {
                               if (section.rows.any(
                                 (row) => !_hiddenRows.contains(row.title),
                               )) ...[
-                                const SizedBox(height: 12),
+                                SizedBox(height: 12),
                                 _sectionCard(section),
                               ],
                             Padding(
@@ -555,13 +561,17 @@ class _ResultsScreenState extends State<ResultsScreen> {
                               child: Row(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  const Icon(Icons.info, color: blue, size: 30),
-                                  const SizedBox(width: 12),
+                                  Icon(
+                                    Icons.info,
+                                    color: appColor(context, 0xFF1976D2),
+                                    size: 30,
+                                  ),
+                                  SizedBox(width: 12),
                                   Expanded(
                                     child: Text(
                                       'All times shown in Zulu (Z) and $localLabel.\nDay badges show days before (-1) or after (+1, +2) the mission date in each column.',
-                                      style: const TextStyle(
-                                        color: blue,
+                                      style: TextStyle(
+                                        color: appColor(context, 0xFF1976D2),
                                         fontSize: 12,
                                       ),
                                     ),
@@ -588,14 +598,20 @@ class _ResultsScreenState extends State<ResultsScreen> {
       padding: const EdgeInsets.symmetric(horizontal: 4),
       child: Column(
         children: [
-          Icon(icon, color: navy, size: 22),
-          const SizedBox(height: 4),
-          Text(label, style: const TextStyle(color: navy, fontSize: 11)),
+          Icon(icon, color: appColor(context, 0xFF0A2B5A), size: 22),
+          SizedBox(height: 4),
+          Text(
+            label,
+            style: TextStyle(
+              color: appColor(context, 0xFF0A2B5A),
+              fontSize: 11,
+            ),
+          ),
           Text(
             value,
             textAlign: TextAlign.center,
-            style: const TextStyle(
-              color: navy,
+            style: TextStyle(
+              color: appColor(context, 0xFF0A2B5A),
               fontWeight: FontWeight.bold,
               fontSize: 14,
             ),
@@ -607,32 +623,35 @@ class _ResultsScreenState extends State<ResultsScreen> {
   Widget _sectionCard(_Section section) => Container(
     padding: const EdgeInsets.all(10),
     decoration: BoxDecoration(
-      color: Colors.white,
+      color: appColor(context, 0xFFFFFFFF),
       borderRadius: BorderRadius.circular(18),
     ),
     child: Column(
       children: [
         Row(
           children: [
-            Icon(section.icon, color: navy, size: 26),
-            const SizedBox(width: 8),
+            Icon(section.icon, color: appColor(context, 0xFF0A2B5A), size: 26),
+            SizedBox(width: 8),
             Expanded(
               flex: 5,
               child: Text(
                 section.title,
-                style: const TextStyle(
-                  color: navy,
+                style: TextStyle(
+                  color: appColor(context, 0xFF0A2B5A),
                   fontSize: 19,
                   fontWeight: FontWeight.bold,
                 ),
               ),
             ),
-            const Expanded(
+            Expanded(
               flex: 3,
               child: Text(
                 'Zulu (Z)',
                 textAlign: TextAlign.center,
-                style: TextStyle(color: blue, fontSize: 11),
+                style: TextStyle(
+                  color: appColor(context, 0xFF1976D2),
+                  fontSize: 11,
+                ),
               ),
             ),
             Expanded(
@@ -640,32 +659,41 @@ class _ResultsScreenState extends State<ResultsScreen> {
               child: Text(
                 localLabel,
                 textAlign: TextAlign.center,
-                style: const TextStyle(color: blue, fontSize: 11),
+                style: TextStyle(
+                  color: appColor(context, 0xFF1976D2),
+                  fontSize: 11,
+                ),
               ),
             ),
           ],
         ),
-        const SizedBox(height: 8),
+        SizedBox(height: 8),
         for (final row in section.rows.where(
           (row) => !_hiddenRows.contains(row.title),
         ))
           Container(
             padding: const EdgeInsets.symmetric(vertical: 4),
-            decoration: const BoxDecoration(
-              border: Border(top: BorderSide(color: Color(0xFFEDF4FB))),
+            decoration: BoxDecoration(
+              border: Border(
+                top: BorderSide(color: appColor(context, 0xFFEDF4FB)),
+              ),
             ),
             child: Row(
               children: [
                 Container(
                   width: 32,
                   height: 32,
-                  decoration: const BoxDecoration(
-                    color: Color(0xFFEDF6FF),
+                  decoration: BoxDecoration(
+                    color: appColor(context, 0xFFEDF6FF),
                     shape: BoxShape.circle,
                   ),
-                  child: Icon(row.icon, color: navy, size: 20),
+                  child: Icon(
+                    row.icon,
+                    color: appColor(context, 0xFF0A2B5A),
+                    size: 20,
+                  ),
                 ),
-                const SizedBox(width: 6),
+                SizedBox(width: 6),
                 Expanded(
                   flex: 5,
                   child: Column(
@@ -673,15 +701,18 @@ class _ResultsScreenState extends State<ResultsScreen> {
                     children: [
                       Text(
                         row.title,
-                        style: const TextStyle(
-                          color: navy,
+                        style: TextStyle(
+                          color: appColor(context, 0xFF0A2B5A),
                           fontWeight: FontWeight.bold,
                           fontSize: 13,
                         ),
                       ),
                       Text(
                         row.formula,
-                        style: const TextStyle(color: blue, fontSize: 11),
+                        style: TextStyle(
+                          color: appColor(context, 0xFF1976D2),
+                          fontSize: 11,
+                        ),
                       ),
                     ],
                   ),
@@ -716,7 +747,9 @@ class _ResultsScreenState extends State<ResultsScreen> {
       margin: const EdgeInsets.only(left: 4),
       padding: const EdgeInsets.symmetric(vertical: 9, horizontal: 2),
       decoration: BoxDecoration(
-        color: highlight ? const Color(0xFFFFF2A0) : const Color(0xFFEAF4FF),
+        color: highlight
+            ? appColor(context, 0xFFFFF2A0)
+            : appColor(context, 0xFFEAF4FF),
         borderRadius: BorderRadius.circular(7),
       ),
       child: Wrap(
@@ -728,7 +761,7 @@ class _ResultsScreenState extends State<ResultsScreen> {
           Text(
             formatted,
             style: TextStyle(
-              color: navy,
+              color: appColor(context, 0xFF0A2B5A),
               fontSize: 14,
               fontWeight: highlight ? FontWeight.bold : FontWeight.w500,
             ),
@@ -737,12 +770,12 @@ class _ResultsScreenState extends State<ResultsScreen> {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 2),
               decoration: BoxDecoration(
-                color: blue,
+                color: appColor(context, 0xFF1976D2),
                 borderRadius: BorderRadius.circular(6),
               ),
               child: Text(
                 '${days > 0 ? '+' : ''}$days',
-                style: const TextStyle(
+                style: TextStyle(
                   color: Colors.white,
                   fontSize: 11,
                   fontWeight: FontWeight.bold,

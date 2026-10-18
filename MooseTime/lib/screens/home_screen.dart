@@ -1,3 +1,5 @@
+import '../services/theme_service.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -163,7 +165,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F8FC),
+      backgroundColor: appColor(context, 0xFFF5F8FC),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(children: [buildHeader(), buildMainCard()]),
@@ -180,7 +182,7 @@ class _HomeScreenState extends State<HomeScreen> {
         return IconButton(
           padding: const EdgeInsets.symmetric(horizontal: 8),
           alignment: Alignment.topRight,
-          constraints: const BoxConstraints(minWidth: 48, minHeight: 40),
+          constraints: BoxConstraints(minWidth: 48, minHeight: 40),
           tooltip: unread == 0
               ? 'Announcements'
               : 'Announcements ($unread unread)',
@@ -197,10 +199,10 @@ class _HomeScreenState extends State<HomeScreen> {
           icon: Badge(
             isLabelVisible: unread > 0,
             label: Text('$unread'),
-            backgroundColor: const Color(0xFF1976D2),
-            child: const Icon(
+            backgroundColor: appColor(context, 0xFF1976D2),
+            child: Icon(
               Icons.notifications_outlined,
-              color: Color(0xFF0A2B5A),
+              color: appColor(context, 0xFF0A2B5A),
               size: 34,
             ),
           ),
@@ -213,9 +215,12 @@ class _HomeScreenState extends State<HomeScreen> {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.fromLTRB(24, 24, 24, 28),
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: [Color(0xFFEAF3FA), Color(0xFFDDEAF5)],
+          colors: [
+            appColor(context, 0xFFEAF3FA),
+            appColor(context, 0xFFDDEAF5),
+          ],
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
         ),
@@ -226,13 +231,13 @@ class _HomeScreenState extends State<HomeScreen> {
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Expanded(
+              Expanded(
                 child: Text(
                   'Mission Duty\nCalculator',
                   style: TextStyle(
                     fontSize: 34,
                     fontWeight: FontWeight.bold,
-                    color: Color(0xFF0A2B5A),
+                    color: appColor(context, 0xFF0A2B5A),
                     height: 1.0,
                   ),
                 ),
@@ -240,13 +245,13 @@ class _HomeScreenState extends State<HomeScreen> {
               buildAnnouncementsButton(),
             ],
           ),
-          const SizedBox(height: 8),
-          const Text(
+          SizedBox(height: 8),
+          Text(
             'PLAN SMARTER. FLY FURTHER.',
             style: TextStyle(
               fontSize: 13,
               letterSpacing: 0.8,
-              color: Color(0xFF6C819B),
+              color: appColor(context, 0xFF6C819B),
             ),
           ),
         ],
@@ -259,13 +264,13 @@ class _HomeScreenState extends State<HomeScreen> {
       margin: const EdgeInsets.all(16),
       padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: appColor(context, 0xFFFFFFFF),
         borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.08),
             blurRadius: 20,
-            offset: const Offset(0, 6),
+            offset: Offset(0, 6),
           ),
         ],
       ),
@@ -273,39 +278,36 @@ class _HomeScreenState extends State<HomeScreen> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           buildCalculatorDropdown(),
-          const Divider(height: 32),
+          Divider(height: 32),
 
           buildJulianDay(),
-          const Divider(height: 32),
+          Divider(height: 32),
 
           if (isAlertCalculator) ...[
             buildEarliestAlert(),
-            const Divider(height: 32),
+            Divider(height: 32),
 
             buildZuluConstant(),
             if (selectedMode == 'Bravo Alert') ...[
-              const Divider(height: 32),
+              Divider(height: 32),
               buildBravoBurnoutAdjustment(),
             ],
           ] else ...[
             buildTakeoffTime(),
-            const Divider(height: 32),
+            Divider(height: 32),
 
             buildZuluConstant(),
-            const Divider(height: 32),
+            Divider(height: 32),
 
-            if (isAugmented) ...[
-              buildQualifyingLeg(),
-              const Divider(height: 32),
-            ],
+            if (isAugmented) ...[buildQualifyingLeg(), Divider(height: 32)],
 
             buildShowTimeAdjustment(),
-            const Divider(height: 32),
+            Divider(height: 32),
 
             buildStationTimeAdjustment(),
           ],
 
-          const SizedBox(height: 24),
+          SizedBox(height: 24),
 
           buildCalculateButton(),
         ],
@@ -327,26 +329,26 @@ class _HomeScreenState extends State<HomeScreen> {
       'Bravo Alert' => Icons.notifications_active,
       _ => Icons.calculate_outlined,
     };
-    return Icon(icon, color: const Color(0xFF0A2B5A), size: 22);
+    return Icon(icon, color: appColor(context, 0xFF0A2B5A), size: 22);
   }
 
   Widget buildCalculatorDropdown() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text('Calculator Mode', style: sectionTitleStyle),
-        const SizedBox(height: 8),
+        Text('Calculator Mode', style: sectionTitleStyle(context)),
+        SizedBox(height: 8),
 
         DropdownButtonFormField<String>(
           initialValue: selectedMode,
-          decoration: inputDecoration(),
+          decoration: inputDecoration(context),
           items: calculatorModes.map((mode) {
             return DropdownMenuItem(
               value: mode,
               child: Row(
                 children: [
                   calculatorModeIcon(mode),
-                  const SizedBox(width: 10),
+                  SizedBox(width: 10),
                   Text(mode),
                 ],
               ),
@@ -368,36 +370,30 @@ class _HomeScreenState extends State<HomeScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text('Julian Day', style: sectionTitleStyle),
-        const SizedBox(height: 8),
+        Text('Julian Day', style: sectionTitleStyle(context)),
+        SizedBox(height: 8),
 
         InkWell(
           onTap: selectDate,
           borderRadius: BorderRadius.circular(14),
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-            decoration: inputBoxDecoration(),
+            decoration: inputBoxDecoration(context),
             child: Row(
               children: [
                 Text(
                   julianDay.toString().padLeft(3, '0'),
-                  style: const TextStyle(
-                    fontSize: 30,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
                 ),
 
-                const SizedBox(width: 16),
+                SizedBox(width: 16),
 
-                const SizedBox(height: 36, child: VerticalDivider()),
+                SizedBox(height: 36, child: VerticalDivider()),
 
-                const SizedBox(width: 16),
+                SizedBox(width: 16),
 
                 Expanded(
-                  child: Text(
-                    formatDate(),
-                    style: const TextStyle(fontSize: 18),
-                  ),
+                  child: Text(formatDate(), style: TextStyle(fontSize: 18)),
                 ),
                 SvgPicture.asset(
                   'assets/icons/calendar.svg',
@@ -416,15 +412,15 @@ class _HomeScreenState extends State<HomeScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Row(
+        Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text('Takeoff Time', style: sectionTitleStyle),
-            Text('Enter HHMM or HH:MM', style: helperStyle),
+            Text('Takeoff Time', style: sectionTitleStyle(context)),
+            Text('Enter HHMM or HH:MM', style: helperStyle(context)),
           ],
         ),
 
-        const SizedBox(height: 8),
+        SizedBox(height: 8),
 
         TextField(
           controller: takeoffController,
@@ -436,7 +432,7 @@ class _HomeScreenState extends State<HomeScreen> {
             FilteringTextInputFormatter.allow(RegExp(r'[0-9:]')),
             LengthLimitingTextInputFormatter(5),
           ],
-          decoration: inputDecoration().copyWith(
+          decoration: inputDecoration(context).copyWith(
             hintText: '14:30',
             suffixIcon: Padding(
               padding: const EdgeInsets.all(14),
@@ -447,7 +443,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
           ),
-          style: const TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+          style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
         ),
       ],
     );
@@ -457,15 +453,15 @@ class _HomeScreenState extends State<HomeScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Row(
+        Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text('Earliest Alert', style: sectionTitleStyle),
-            Text('Enter HHMM or HH:MM', style: helperStyle),
+            Text('Earliest Alert', style: sectionTitleStyle(context)),
+            Text('Enter HHMM or HH:MM', style: helperStyle(context)),
           ],
         ),
 
-        const SizedBox(height: 8),
+        SizedBox(height: 8),
 
         TextField(
           controller: earliestAlertController,
@@ -477,7 +473,7 @@ class _HomeScreenState extends State<HomeScreen> {
             FilteringTextInputFormatter.allow(RegExp(r'[0-9:]')),
             LengthLimitingTextInputFormatter(5),
           ],
-          decoration: inputDecoration().copyWith(
+          decoration: inputDecoration(context).copyWith(
             hintText: '14:30',
             suffixIcon: Padding(
               padding: const EdgeInsets.all(14),
@@ -488,7 +484,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
           ),
-          style: const TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+          style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
         ),
       ],
     );
@@ -498,30 +494,33 @@ class _HomeScreenState extends State<HomeScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Row(
+        Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text('Zulu Conversion', style: sectionTitleStyle),
-            Text('Enter offset between -12 to +14', style: helperStyle),
+            Text('Zulu Conversion', style: sectionTitleStyle(context)),
+            Text(
+              'Enter offset between -12 to +14',
+              style: helperStyle(context),
+            ),
           ],
         ),
 
-        const SizedBox(height: 8),
+        SizedBox(height: 8),
         TextField(
           controller: zuluConstantController,
           keyboardType: const TextInputType.numberWithOptions(signed: true),
           inputFormatters: [
             FilteringTextInputFormatter.allow(RegExp(r'^-?\d{0,2}$')),
           ],
-          decoration: inputDecoration().copyWith(
+          decoration: inputDecoration(context).copyWith(
             hintText: '0',
-            suffixIcon: const Icon(
+            suffixIcon: Icon(
               Icons.public,
-              color: Color(0xFF0A2B5A),
+              color: appColor(context, 0xFF0A2B5A),
               size: 24,
             ),
           ),
-          style: const TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+          style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
         ),
       ],
     );
@@ -533,8 +532,8 @@ class _HomeScreenState extends State<HomeScreen> {
       children: [
         Row(
           children: [
-            const Text('Qualifying Legs', style: sectionTitleStyle),
-            const SizedBox(width: 8),
+            Text('Qualifying Legs', style: sectionTitleStyle(context)),
+            SizedBox(width: 8),
             IconButton(
               icon: SvgPicture.asset(
                 'assets/icons/info.svg',
@@ -546,8 +545,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   context: context,
                   builder: (context) {
                     return AlertDialog(
-                      title: const Text('Qualifying Legs'),
-                      content: const Text(
+                      title: Text('Qualifying Legs'),
+                      content: Text(
                         'Choose the qualifying-leg rule that applies to the mission.',
                       ),
                       actions: [
@@ -555,7 +554,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           onPressed: () {
                             Navigator.pop(context);
                           },
-                          child: const Text('Close'),
+                          child: Text('Close'),
                         ),
                       ],
                     );
@@ -566,17 +565,17 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
 
-        const SizedBox(height: 8),
+        SizedBox(height: 8),
 
         Container(
           padding: const EdgeInsets.all(14),
           decoration: BoxDecoration(
-            color: const Color(0xFFEAF3FA),
+            color: appColor(context, 0xFFEAF3FA),
             borderRadius: BorderRadius.circular(16),
           ),
           child: Row(
             children: [
-              const Expanded(
+              Expanded(
                 child: Column(
                   children: [
                     Text(
@@ -589,7 +588,10 @@ class _HomeScreenState extends State<HomeScreen> {
                     SizedBox(height: 4),
                     Text(
                       'OR',
-                      style: TextStyle(fontSize: 12, color: Color(0xFF6C819B)),
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: appColor(context, 0xFF6C819B),
+                      ),
                     ),
                     SizedBox(height: 4),
                     Text(
@@ -612,7 +614,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 },
               ),
 
-              const Expanded(
+              Expanded(
                 child: Column(
                   children: [
                     Text(
@@ -625,7 +627,10 @@ class _HomeScreenState extends State<HomeScreen> {
                     SizedBox(height: 4),
                     Text(
                       'OR',
-                      style: TextStyle(fontSize: 12, color: Color(0xFF6C819B)),
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: appColor(context, 0xFF6C819B),
+                      ),
                     ),
                     SizedBox(height: 4),
                     Text(
@@ -725,14 +730,17 @@ class _HomeScreenState extends State<HomeScreen> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(title, style: sectionTitleStyle),
-            Text('${min.toInt()} - ${max.toInt()} $unit', style: helperStyle),
+            Text(title, style: sectionTitleStyle(context)),
+            Text(
+              '${min.toInt()} - ${max.toInt()} $unit',
+              style: helperStyle(context),
+            ),
           ],
         ),
 
-        const SizedBox(height: 4),
+        SizedBox(height: 4),
 
-        Text(helper, style: helperStyle),
+        Text(helper, style: helperStyle(context)),
 
         Row(
           children: [
@@ -761,17 +769,14 @@ class _HomeScreenState extends State<HomeScreen> {
                   keyboardType: TextInputType.number,
                   inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                   textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    fontSize: 17,
-                    fontWeight: FontWeight.bold,
-                  ),
-                  decoration: inputDecoration().copyWith(
+                  style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
+                  decoration: inputDecoration(context).copyWith(
                     contentPadding: const EdgeInsets.symmetric(
                       horizontal: 6,
                       vertical: 10,
                     ),
                     suffixText: unit,
-                    suffixStyle: helperStyle,
+                    suffixStyle: helperStyle(context),
                   ),
                   onChanged: (text) {
                     final minutes = int.tryParse(text);
@@ -807,7 +812,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
                   if (!isValidZuluTime(alertInput)) {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
+                      SnackBar(
                         content: Text(
                           'Enter a valid earliest alert time between 00:00 and 23:59.',
                         ),
@@ -820,7 +825,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
                   if (!isValidZuluTime(takeoffInput)) {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
+                      SnackBar(
                         content: Text(
                           'Enter a valid takeoff time between 00:00 and 23:59.',
                         ),
@@ -832,7 +837,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
                 if (!isValidZuluConstant(zuluInput)) {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
+                    SnackBar(
                       content: Text(
                         'Enter a Zulu Conversion between -12 and +14.',
                       ),
@@ -870,7 +875,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 );
                 setState(() => isCalculating = true);
                 try {
-                  await Future.delayed(const Duration(milliseconds: 400));
+                  await Future.delayed(Duration(milliseconds: 400));
                   if (!mounted) return;
                   widget.onCalculated(result);
                 } finally {
@@ -878,16 +883,16 @@ class _HomeScreenState extends State<HomeScreen> {
                 }
               },
         style: ElevatedButton.styleFrom(
-          backgroundColor: const Color(0xFF1976D2),
+          backgroundColor: appColor(context, 0xFF1976D2),
           foregroundColor: Colors.white,
-          disabledBackgroundColor: const Color(0xFF1976D2),
+          disabledBackgroundColor: appColor(context, 0xFF1976D2),
           disabledForegroundColor: Colors.white,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
           ),
         ),
         child: isCalculating
-            ? const Row(
+            ? Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   SizedBox(
@@ -908,11 +913,11 @@ class _HomeScreenState extends State<HomeScreen> {
             : Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Text(
+                  Text(
                     'Calculate',
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
-                  const SizedBox(width: 10),
+                  SizedBox(width: 10),
                   SvgPicture.asset(
                     'assets/icons/forwardarrow.svg',
                     width: 30,
@@ -936,33 +941,34 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 }
 
-const sectionTitleStyle = TextStyle(
+TextStyle sectionTitleStyle(BuildContext context) => TextStyle(
   fontSize: 17,
   fontWeight: FontWeight.bold,
-  color: Color(0xFF0A2B5A),
+  color: appColor(context, 0xFF0A2B5A),
 );
 
-const helperStyle = TextStyle(fontSize: 12, color: Color(0xFF6C819B));
+TextStyle helperStyle(BuildContext context) =>
+    TextStyle(fontSize: 12, color: appColor(context, 0xFF6C819B));
 
-InputDecoration inputDecoration() {
+InputDecoration inputDecoration(BuildContext context) {
   return InputDecoration(
     filled: true,
-    fillColor: const Color(0xFFF8FBFE),
+    fillColor: appColor(context, 0xFFF8FBFE),
     border: OutlineInputBorder(
       borderRadius: BorderRadius.circular(14),
-      borderSide: const BorderSide(color: Color(0xFFD5E2EE)),
+      borderSide: BorderSide(color: appColor(context, 0xFFD5E2EE)),
     ),
     enabledBorder: OutlineInputBorder(
       borderRadius: BorderRadius.circular(14),
-      borderSide: const BorderSide(color: Color(0xFFD5E2EE)),
+      borderSide: BorderSide(color: appColor(context, 0xFFD5E2EE)),
     ),
   );
 }
 
-BoxDecoration inputBoxDecoration() {
+BoxDecoration inputBoxDecoration(BuildContext context) {
   return BoxDecoration(
-    color: const Color(0xFFF8FBFE),
+    color: appColor(context, 0xFFF8FBFE),
     borderRadius: BorderRadius.circular(14),
-    border: Border.all(color: const Color(0xFFD5E2EE)),
+    border: Border.all(color: appColor(context, 0xFFD5E2EE)),
   );
 }

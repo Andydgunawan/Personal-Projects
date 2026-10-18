@@ -1,3 +1,5 @@
+import '../services/theme_service.dart';
+
 import 'package:flutter/material.dart';
 
 import '../services/feedback_service.dart';
@@ -17,7 +19,6 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
   final _email = TextEditingController();
   String? _type;
   bool _submitting = false;
-  static const navy = Color(0xFF0A2B5A);
 
   @override
   void dispose() {
@@ -48,15 +49,13 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
       setState(() => _type = null);
       ScaffoldMessenger.of(context).clearSnackBars();
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Thank you! Your feedback was submitted.'),
-        ),
+        SnackBar(content: Text('Thank you! Your feedback was submitted.')),
       );
     } catch (_) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).clearSnackBars();
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
+        SnackBar(
           content: Text(
             'Could not submit feedback. Please try again. Your message has been kept.',
           ),
@@ -70,17 +69,19 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
   InputDecoration _decoration(String label) => InputDecoration(
     labelText: label,
     filled: true,
-    fillColor: Colors.white,
+    fillColor: appColor(context, 0xFFFFFFFF),
     border: OutlineInputBorder(borderRadius: BorderRadius.circular(14)),
   );
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F8FC),
+      backgroundColor: appColor(context, 0xFFF5F8FC),
       appBar: AppBar(
-        title: const Text('Feedback & Support'),
-        backgroundColor: navy,
+        title: Text('Feedback & Support'),
+        backgroundColor: Theme.of(context).brightness == Brightness.dark
+            ? const Color(0xFF174529)
+            : const Color(0xFF0A2B5A),
         foregroundColor: Colors.white,
       ),
       body: SingleChildScrollView(
@@ -90,11 +91,11 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              const Text(
+              Text(
                 'Report a bug, suggest a feature, or share feedback.',
-                style: TextStyle(color: navy),
+                style: TextStyle(color: appColor(context, 0xFF0A2B5A)),
               ),
-              const SizedBox(height: 20),
+              SizedBox(height: 20),
               DropdownButtonFormField<String>(
                 initialValue: _type,
                 decoration: _decoration('Type'),
@@ -109,14 +110,14 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
                     : (value) => setState(() => _type = value),
                 validator: _required,
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: 16),
               TextFormField(
                 controller: _subject,
                 enabled: !_submitting,
                 decoration: _decoration('Subject'),
                 validator: _required,
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: 16),
               TextFormField(
                 controller: _message,
                 enabled: !_submitting,
@@ -125,7 +126,7 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
                 maxLines: 10,
                 validator: _required,
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: 16),
               TextFormField(
                 controller: _email,
                 enabled: !_submitting,
@@ -141,22 +142,22 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
                   return null;
                 },
               ),
-              const SizedBox(height: 24),
+              SizedBox(height: 24),
               SizedBox(
                 height: 56,
                 child: ElevatedButton(
                   onPressed: _submitting ? null : _submit,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF1976D2),
+                    backgroundColor: appColor(context, 0xFF1976D2),
                     foregroundColor: Colors.white,
-                    disabledBackgroundColor: const Color(0xFF1976D2),
+                    disabledBackgroundColor: appColor(context, 0xFF1976D2),
                     disabledForegroundColor: Colors.white,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(16),
                     ),
                   ),
                   child: _submitting
-                      ? const Row(
+                      ? Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             SizedBox(
@@ -171,7 +172,7 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
                             Text('Submitting...'),
                           ],
                         )
-                      : const Text('Submit Feedback'),
+                      : Text('Submit Feedback'),
                 ),
               ),
             ],

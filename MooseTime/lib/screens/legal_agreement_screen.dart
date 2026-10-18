@@ -1,3 +1,5 @@
+import '../services/theme_service.dart';
+
 import 'package:flutter/material.dart';
 
 import '../services/legal_agreement_service.dart';
@@ -21,7 +23,6 @@ class LegalAgreementScreen extends StatefulWidget {
 class _LegalAgreementScreenState extends State<LegalAgreementScreen> {
   bool _acknowledged = false;
   bool _saving = false;
-  static const _navy = Color(0xFF0A2B5A);
 
   Future<void> _continue() async {
     if (!_acknowledged || _saving) return;
@@ -35,7 +36,7 @@ class _LegalAgreementScreenState extends State<LegalAgreementScreen> {
       debugPrintStack(stackTrace: stack);
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
+          SnackBar(
             content: Text('Could not save your agreement. Please try again.'),
           ),
         );
@@ -47,8 +48,8 @@ class _LegalAgreementScreenState extends State<LegalAgreementScreen> {
 
   Widget _document(String label, Widget page) => ListTile(
     contentPadding: const EdgeInsets.symmetric(horizontal: 16),
-    title: Text(label, style: const TextStyle(color: _navy)),
-    trailing: const Icon(Icons.chevron_right, color: _navy),
+    title: Text(label, style: TextStyle(color: appColor(context, 0xFF0A2B5A))),
+    trailing: Icon(Icons.chevron_right, color: appColor(context, 0xFF0A2B5A)),
     onTap: () =>
         Navigator.of(context)
             .push<void>(MaterialPageRoute(builder: (context) => page)),
@@ -56,98 +57,110 @@ class _LegalAgreementScreenState extends State<LegalAgreementScreen> {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-    backgroundColor: const Color(0xFFF5F8FC),
+    backgroundColor: appColor(context, 0xFFF5F8FC),
     body: SafeArea(
       child: SingleChildScrollView(
         child: Center(
           child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 640),
+            constraints: BoxConstraints(maxWidth: 640),
             child: Padding(
               padding: const EdgeInsets.all(24),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  const SizedBox(height: 16),
-                  const Text(
+                  SizedBox(height: 16),
+                  Text(
                     'Welcome to MooseTime',
                     style: TextStyle(
                       fontSize: 30,
                       fontWeight: FontWeight.bold,
-                      color: _navy,
+                      color: appColor(context, 0xFF0A2B5A),
                     ),
                   ),
-                  const SizedBox(height: 16),
-                  const Text(
+                  SizedBox(height: 16),
+                  Text(
                     'Before using MooseTime, please review the Terms of Use, Privacy Policy, and Disclaimer.',
-                    style: TextStyle(fontSize: 16, height: 1.5, color: _navy),
+                    style: TextStyle(
+                      fontSize: 16,
+                      height: 1.5,
+                      color: appColor(context, 0xFF0A2B5A),
+                    ),
                   ),
-                  const SizedBox(height: 24),
+                  SizedBox(height: 24),
                   Container(
                     padding: const EdgeInsets.all(18),
                     decoration: BoxDecoration(
-                      color: const Color(0xFFEAF3FA),
+                      color: appColor(context, 0xFFEAF3FA),
                       borderRadius: BorderRadius.circular(16),
                     ),
-                    child: const Text(
+                    child: Text(
                       'MooseTime is a planning aid and is not an official source of operational guidance. Calculations should be verified against current official publications, regulations, and unit guidance.',
-                      style: TextStyle(fontSize: 16, height: 1.5, color: _navy),
+                      style: TextStyle(
+                        fontSize: 16,
+                        height: 1.5,
+                        color: appColor(context, 0xFF0A2B5A),
+                      ),
                     ),
                   ),
-                  const SizedBox(height: 24),
-                  const Text(
+                  SizedBox(height: 24),
+                  Text(
                     'Legal',
                     style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
-                      color: _navy,
+                      color: appColor(context, 0xFF0A2B5A),
                     ),
                   ),
-                  const SizedBox(height: 12),
+                  SizedBox(height: 12),
                   Material(
-                    color: Colors.white,
+                    color: appColor(context, 0xFFFFFFFF),
                     borderRadius: BorderRadius.circular(16),
                     clipBehavior: Clip.antiAlias,
                     child: Column(
                       children: [
-                        _document('Terms of Use', const TermsScreen()),
-                        const Divider(height: 1),
-                        _document('Privacy Policy', const PrivacyScreen()),
-                        const Divider(height: 1),
-                        _document('Disclaimer', const DisclaimerScreen()),
+                        _document('Terms of Use', TermsScreen()),
+                        Divider(height: 1),
+                        _document('Privacy Policy', PrivacyScreen()),
+                        Divider(height: 1),
+                        _document('Disclaimer', DisclaimerScreen()),
                       ],
                     ),
                   ),
-                  const SizedBox(height: 24),
+                  SizedBox(height: 24),
                   CheckboxListTile(
                     contentPadding: EdgeInsets.zero,
                     controlAffinity: ListTileControlAffinity.leading,
-                    activeColor: const Color(0xFF1976D2),
+                    activeColor: appColor(context, 0xFF1976D2),
                     value: _acknowledged,
                     onChanged: _saving
                         ? null
                         : (value) =>
                               setState(() => _acknowledged = value ?? false),
-                    title: const Text(
+                    title: Text(
                       'I agree to the Terms of Use and acknowledge the Privacy Policy and Disclaimer.',
-                      style: TextStyle(fontSize: 16, height: 1.5, color: _navy),
+                      style: TextStyle(
+                        fontSize: 16,
+                        height: 1.5,
+                        color: appColor(context, 0xFF0A2B5A),
+                      ),
                     ),
                   ),
-                  const SizedBox(height: 24),
+                  SizedBox(height: 24),
                   SizedBox(
                     height: 56,
                     child: ElevatedButton(
                       onPressed: _acknowledged && !_saving ? _continue : null,
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF1976D2),
+                        backgroundColor: appColor(context, 0xFF1976D2),
                         foregroundColor: Colors.white,
-                        disabledBackgroundColor: const Color(0xFFDDEAF5),
-                        disabledForegroundColor: const Color(0xFF526780),
+                        disabledBackgroundColor: appColor(context, 0xFFDDEAF5),
+                        disabledForegroundColor: appColor(context, 0xFF526780),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(16),
                         ),
                       ),
                       child: _saving
-                          ? const Row(
+                          ? Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 SizedBox(
@@ -162,7 +175,7 @@ class _LegalAgreementScreenState extends State<LegalAgreementScreen> {
                                 Text('Saving...'),
                               ],
                             )
-                          : const Text(
+                          : Text(
                               'Continue',
                               style: TextStyle(
                                 fontSize: 18,
@@ -171,7 +184,7 @@ class _LegalAgreementScreenState extends State<LegalAgreementScreen> {
                             ),
                     ),
                   ),
-                  const SizedBox(height: 16),
+                  SizedBox(height: 16),
                 ],
               ),
             ),

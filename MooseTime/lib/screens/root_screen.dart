@@ -1,3 +1,5 @@
+import '../services/theme_service.dart';
+
 import 'package:flutter/material.dart';
 
 import '../services/announcement_service.dart';
@@ -43,26 +45,32 @@ class _RootScreenState extends State<RootScreen> {
                   key: ValueKey(_resultNumber),
                   child: _latestResult!,
                 ),
-          const MoreScreen(),
+          MoreScreen(),
         ],
       ),
       bottomNavigationBar: NavigationBar(
         selectedIndex: _selectedIndex,
         onDestinationSelected: (index) =>
             setState(() => _selectedIndex = index),
-        backgroundColor: const Color(0xFFEAF3FA),
-        indicatorColor: const Color(0xFFBFD9EF),
-        destinations: const [
+        backgroundColor: appColor(context, 0xFFEAF3FA),
+        indicatorColor: appColor(context, 0xFFBFD9EF),
+        destinations: [
           NavigationDestination(
-            icon: Icon(Icons.calculate_outlined, color: Color(0xFF0A2B5A)),
+            icon: Icon(
+              Icons.calculate_outlined,
+              color: appColor(context, 0xFF0A2B5A),
+            ),
             label: 'Calculator',
           ),
           NavigationDestination(
-            icon: Icon(Icons.assignment_outlined, color: Color(0xFF0A2B5A)),
+            icon: Icon(
+              Icons.assignment_outlined,
+              color: appColor(context, 0xFF0A2B5A),
+            ),
             label: 'Results',
           ),
           NavigationDestination(
-            icon: Icon(Icons.more_horiz, color: Color(0xFF0A2B5A)),
+            icon: Icon(Icons.more_horiz, color: appColor(context, 0xFF0A2B5A)),
             label: 'More',
           ),
         ],
@@ -75,22 +83,26 @@ class _EmptyResults extends StatelessWidget {
   const _EmptyResults();
 
   @override
-  Widget build(BuildContext context) => const ColoredBox(
-    color: Color(0xFFE7F2FC),
+  Widget build(BuildContext context) => ColoredBox(
+    color: appColor(context, 0xFFE7F2FC),
     child: Center(
       child: Padding(
         padding: EdgeInsets.all(24),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(Icons.assignment_outlined, size: 48, color: Color(0xFF0A2B5A)),
+            Icon(
+              Icons.assignment_outlined,
+              size: 48,
+              color: appColor(context, 0xFF0A2B5A),
+            ),
             SizedBox(height: 16),
             Text(
               'No calculation yet',
               style: TextStyle(
                 fontSize: 22,
                 fontWeight: FontWeight.bold,
-                color: Color(0xFF0A2B5A),
+                color: appColor(context, 0xFF0A2B5A),
               ),
             ),
             SizedBox(height: 8),

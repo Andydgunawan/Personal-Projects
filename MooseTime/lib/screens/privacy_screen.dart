@@ -1,3 +1,5 @@
+import '../services/theme_service.dart';
+
 import 'package:flutter/material.dart';
 
 import 'feedback_screen.dart';
@@ -9,8 +11,6 @@ const privacyLastUpdated = 'October 14, 2026';
 
 class PrivacyScreen extends StatelessWidget {
   const PrivacyScreen({super.key});
-  static const _navy = Color(0xFF0A2B5A);
-  static const _bodyStyle = TextStyle(fontSize: 16, height: 1.6, color: _navy);
 
   Widget _section(
     BuildContext context,
@@ -35,10 +35,10 @@ class PrivacyScreen extends StatelessWidget {
               fontSize: subsection ? 18 : 20,
               height: 1.3,
               fontWeight: FontWeight.bold,
-              color: _navy,
+              color: appColor(context, 0xFF0A2B5A),
             ),
           ),
-          const SizedBox(height: 12),
+          SizedBox(height: 12),
           Text.rich(
             TextSpan(
               children: [
@@ -50,11 +50,13 @@ class PrivacyScreen extends StatelessWidget {
                     child: TextButton(
                       onPressed: onLinkTap,
                       style: TextButton.styleFrom(
-                        foregroundColor: const Color(0xFF1976D2),
+                        foregroundColor: appColor(context, 0xFF1976D2),
                         padding: const EdgeInsets.symmetric(horizontal: 2),
-                        textStyle: _bodyStyle.copyWith(
-                          decoration: TextDecoration.underline,
-                        ),
+                        textStyle: TextStyle(
+                          fontSize: 16,
+                          height: 1.6,
+                          color: appColor(context, 0xFF0A2B5A),
+                        ).copyWith(decoration: TextDecoration.underline),
                       ),
                       child: Text(linkLabel!),
                     ),
@@ -63,7 +65,11 @@ class PrivacyScreen extends StatelessWidget {
                 ],
               ],
             ),
-            style: _bodyStyle,
+            style: TextStyle(
+              fontSize: 16,
+              height: 1.6,
+              color: appColor(context, 0xFF0A2B5A),
+            ),
           ),
         ],
       ),
@@ -81,7 +87,7 @@ class PrivacyScreen extends StatelessWidget {
       debugPrint('Could not open Supabase privacy page: $error');
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
+          SnackBar(
             content: Text(
               'Could not open Supabase privacy information. Please try again.',
             ),
@@ -93,24 +99,29 @@ class PrivacyScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-    backgroundColor: const Color(0xFFF5F8FC),
+    backgroundColor: appColor(context, 0xFFF5F8FC),
     appBar: AppBar(
-      title: const Text('Privacy Policy'),
-      backgroundColor: _navy,
+      title: Text('Privacy Policy'),
+      backgroundColor: Theme.of(context).brightness == Brightness.dark
+          ? const Color(0xFF174529)
+          : const Color(0xFF0A2B5A),
       foregroundColor: Colors.white,
     ),
     body: SingleChildScrollView(
       child: Center(
         child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 720),
+          constraints: BoxConstraints(maxWidth: 720),
           child: Padding(
             padding: const EdgeInsets.all(24),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                const Text(
+                Text(
                   'Last updated: $privacyLastUpdated',
-                  style: TextStyle(fontSize: 14, color: Color(0xFF6C819B)),
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: appColor(context, 0xFF6C819B),
+                  ),
                 ),
                 _section(
                   context,
@@ -166,9 +177,7 @@ class PrivacyScreen extends StatelessWidget {
                   "Please do not submit sensitive information through the Feedback & Support form.\n\nThis includes, but is not limited to:\n- Classified information\n- Controlled or restricted operational information\n- Passwords\n- Authentication credentials\n- Social Security numbers\n- Financial account information\n- Medical information\n- Any information you are not authorized to share\n\nFeedback submissions should contain only the information necessary to explain your issue, suggestion, or question.",
                   linkLabel: 'Feedback & Support',
                   onLinkTap: () => Navigator.of(context).push<void>(
-                    MaterialPageRoute(
-                      builder: (context) => const FeedbackScreen(),
-                    ),
+                    MaterialPageRoute(builder: (context) => FeedbackScreen()),
                   ),
                 ),
                 _section(
@@ -187,9 +196,7 @@ class PrivacyScreen extends StatelessWidget {
                   "MooseTime is not designed specifically for children and is intended for users who have a legitimate reason to use its mission and duty-time planning functionality.\n\nMooseTime does not knowingly seek to collect personal information from children.\n\nIf you believe personal information from a child has been submitted through MooseTime, please contact the developer through the Feedback & Support section.",
                   linkLabel: 'Feedback & Support',
                   onLinkTap: () => Navigator.of(context).push<void>(
-                    MaterialPageRoute(
-                      builder: (context) => const FeedbackScreen(),
-                    ),
+                    MaterialPageRoute(builder: (context) => FeedbackScreen()),
                   ),
                 ),
                 _section(
@@ -208,24 +215,26 @@ class PrivacyScreen extends StatelessWidget {
                   "If you have questions about this Privacy Policy or how MooseTime handles information, you can contact the developer through the Feedback & Support section of the app.",
                   linkLabel: 'Feedback & Support',
                   onLinkTap: () => Navigator.of(context).push<void>(
-                    MaterialPageRoute(
-                      builder: (context) => const FeedbackScreen(),
-                    ),
+                    MaterialPageRoute(builder: (context) => FeedbackScreen()),
                   ),
                 ),
-                const SizedBox(height: 28),
+                SizedBox(height: 28),
                 Container(
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: const Color(0xFFEAF3FA),
+                    color: appColor(context, 0xFFEAF3FA),
                     borderRadius: BorderRadius.circular(16),
                   ),
-                  child: const Text(
+                  child: Text(
                     'Draft notice: This Privacy Policy is a draft and should be reviewed before MooseTime is publicly released.',
-                    style: TextStyle(fontSize: 14, height: 1.5, color: _navy),
+                    style: TextStyle(
+                      fontSize: 14,
+                      height: 1.5,
+                      color: appColor(context, 0xFF0A2B5A),
+                    ),
                   ),
                 ),
-                const SizedBox(height: 16),
+                SizedBox(height: 16),
               ],
             ),
           ),

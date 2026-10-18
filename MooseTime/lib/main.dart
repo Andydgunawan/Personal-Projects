@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'services/theme_service.dart';
+
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:flutter/material.dart';
 
@@ -43,6 +45,7 @@ Future<void> main() async {
     MooseTimeApp(
       announcementService: announcements,
       legalService: legalService,
+      themeService: ThemeService(preferences),
     ),
   );
 }
@@ -52,21 +55,41 @@ class MooseTimeApp extends StatelessWidget {
     super.key,
     required this.announcementService,
     required this.legalService,
+    this.themeService,
   });
 
   final AnnouncementService announcementService;
+  final ThemeService? themeService;
   final LegalAgreementService legalService;
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'MooseTime',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(useMaterial3: true),
-      home: LegalGate(
-        announcementService: announcementService,
-        legalService: legalService,
+    final app = AnimatedBuilder(
+      animation: themeService ?? const AlwaysStoppedAnimation<bool>(false),
+      builder: (context, _) => MaterialApp(
+        title: 'MooseTime',
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(useMaterial3: true),
+        darkTheme: ThemeData(
+          useMaterial3: true,
+          colorScheme: ColorScheme.fromSeed(
+            seedColor: const Color(0xFF238B50),
+            brightness: Brightness.dark,
+            surface: const Color(0xFF131D17),
+          ),
+          scaffoldBackgroundColor: const Color(0xFF090E0B),
+        ),
+        themeMode: themeService?.isDark == true
+            ? ThemeMode.dark
+            : ThemeMode.light,
+        home: LegalGate(
+          announcementService: announcementService,
+          legalService: legalService,
+        ),
       ),
     );
+    return themeService == null
+        ? app
+        : ThemeScope(service: themeService!, child: app);
   }
 }

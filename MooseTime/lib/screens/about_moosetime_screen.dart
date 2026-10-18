@@ -1,3 +1,5 @@
+import '../services/theme_service.dart';
+
 import 'package:flutter/material.dart';
 
 import 'disclaimer_screen.dart';
@@ -6,7 +8,6 @@ import 'information_screen.dart';
 class AboutMooseTimeScreen extends StatelessWidget {
   const AboutMooseTimeScreen({super.key});
 
-  static const _navy = Color(0xFF0A2B5A);
   static const _features = [
     'Multiple calculator modes',
     'Zulu and Local time display',
@@ -21,7 +22,7 @@ class AboutMooseTimeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) => InformationScreen(
     title: 'About MooseTime',
-    paragraphs: const [
+    paragraphs: [
       'MooseTime is a mission and duty-time planning calculator designed to help aircrew quickly work through common scheduling calculations.',
       'The app supports Airland Basic, Airland Augmented, Airdrop Basic, Airdrop Augmented, Alpha Alert, and Bravo Alert calculations.',
       'MooseTime uses Zulu time as the primary time reference, with local-time conversion provided for convenience.',
@@ -30,19 +31,19 @@ class AboutMooseTimeScreen extends StatelessWidget {
     footer: Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        const Text(
+        Text(
           'Key Features',
           style: TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.bold,
-            color: _navy,
+            color: appColor(context, 0xFF0A2B5A),
           ),
         ),
-        const SizedBox(height: 12),
+        SizedBox(height: 12),
         Container(
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: appColor(context, 0xFFFFFFFF),
             borderRadius: BorderRadius.circular(16),
           ),
           child: Column(
@@ -53,16 +54,19 @@ class AboutMooseTimeScreen extends StatelessWidget {
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Icon(
+                      Icon(
                         Icons.check_circle_outline,
                         size: 20,
-                        color: Color(0xFF1976D2),
+                        color: appColor(context, 0xFF1976D2),
                       ),
-                      const SizedBox(width: 12),
+                      SizedBox(width: 12),
                       Expanded(
                         child: Text(
                           feature,
-                          style: const TextStyle(fontSize: 16, color: _navy),
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: appColor(context, 0xFF0A2B5A),
+                          ),
                         ),
                       ),
                     ],
@@ -71,9 +75,9 @@ class AboutMooseTimeScreen extends StatelessWidget {
             ],
           ),
         ),
-        const SizedBox(height: 24),
+        SizedBox(height: 24),
         Material(
-          color: const Color(0xFFEAF3FA),
+          color: appColor(context, 0xFFEAF3FA),
           borderRadius: BorderRadius.circular(16),
           clipBehavior: Clip.antiAlias,
           child: ListTile(
@@ -81,18 +85,27 @@ class AboutMooseTimeScreen extends StatelessWidget {
               horizontal: 16,
               vertical: 8,
             ),
-            leading: const Icon(Icons.info_outline, color: _navy),
-            title: const Text(
+            leading: Icon(
+              Icons.info_outline,
+              color: appColor(context, 0xFF0A2B5A),
+            ),
+            title: Text(
               'Important usage information',
-              style: TextStyle(color: _navy, fontWeight: FontWeight.w600),
+              style: TextStyle(
+                color: appColor(context, 0xFF0A2B5A),
+                fontWeight: FontWeight.w600,
+              ),
             ),
-            subtitle: const Text(
+            subtitle: Text(
               'See Disclaimer',
-              style: TextStyle(color: Color(0xFF1976D2)),
+              style: TextStyle(color: appColor(context, 0xFF1976D2)),
             ),
-            trailing: const Icon(Icons.chevron_right, color: _navy),
+            trailing: Icon(
+              Icons.chevron_right,
+              color: appColor(context, 0xFF0A2B5A),
+            ),
             onTap: () => Navigator.of(context).push<void>(
-              MaterialPageRoute(builder: (context) => const DisclaimerScreen()),
+              MaterialPageRoute(builder: (context) => DisclaimerScreen()),
             ),
           ),
         ),

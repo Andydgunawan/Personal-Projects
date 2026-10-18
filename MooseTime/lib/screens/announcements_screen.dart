@@ -1,3 +1,5 @@
+import '../services/theme_service.dart';
+
 import 'dart:async';
 
 import 'package:flutter/material.dart';
@@ -15,7 +17,6 @@ class AnnouncementsScreen extends StatefulWidget {
 }
 
 class _AnnouncementsScreenState extends State<AnnouncementsScreen> {
-  static const navy = Color(0xFF0A2B5A);
   String? _openingId;
 
   @override
@@ -37,8 +38,11 @@ class _AnnouncementsScreenState extends State<AnnouncementsScreen> {
       await showDialog<void>(
         context: context,
         builder: (context) => AlertDialog(
-          backgroundColor: const Color(0xFFF5F8FC),
-          title: Text(announcement.title, style: const TextStyle(color: navy)),
+          backgroundColor: appColor(context, 0xFFF5F8FC),
+          title: Text(
+            announcement.title,
+            style: TextStyle(color: appColor(context, 0xFF0A2B5A)),
+          ),
           content: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -46,9 +50,9 @@ class _AnnouncementsScreenState extends State<AnnouncementsScreen> {
               children: [
                 Text(
                   _date(announcement.date),
-                  style: const TextStyle(color: Color(0xFF6C819B)),
+                  style: TextStyle(color: appColor(context, 0xFF6C819B)),
                 ),
-                const SizedBox(height: 16),
+                SizedBox(height: 16),
                 Text(announcement.body),
               ],
             ),
@@ -56,7 +60,7 @@ class _AnnouncementsScreenState extends State<AnnouncementsScreen> {
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Close'),
+              child: Text('Close'),
             ),
           ],
         ),
@@ -64,7 +68,7 @@ class _AnnouncementsScreenState extends State<AnnouncementsScreen> {
     } catch (_) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
+          SnackBar(
             content: Text('Could not save read status. Please try again.'),
           ),
         );
@@ -77,17 +81,19 @@ class _AnnouncementsScreenState extends State<AnnouncementsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F8FC),
+      backgroundColor: appColor(context, 0xFFF5F8FC),
       appBar: AppBar(
-        title: const Text('Announcements'),
-        backgroundColor: navy,
+        title: Text('Announcements'),
+        backgroundColor: Theme.of(context).brightness == Brightness.dark
+            ? const Color(0xFF174529)
+            : const Color(0xFF0A2B5A),
         foregroundColor: Colors.white,
       ),
       body: AnimatedBuilder(
         animation: widget.service,
         builder: (context, _) => Column(
           children: [
-            if (widget.service.isLoading) const LinearProgressIndicator(),
+            if (widget.service.isLoading) LinearProgressIndicator(),
             if (widget.service.errorMessage != null)
               Padding(
                 padding: const EdgeInsets.all(16),
@@ -101,8 +107,8 @@ class _AnnouncementsScreenState extends State<AnnouncementsScreen> {
                       onPressed: widget.service.isLoading
                           ? null
                           : widget.service.refresh,
-                      icon: const Icon(Icons.refresh),
-                      label: const Text('Retry'),
+                      icon: Icon(Icons.refresh),
+                      label: Text('Retry'),
                     ),
                   ],
                 ),
@@ -112,11 +118,11 @@ class _AnnouncementsScreenState extends State<AnnouncementsScreen> {
                 onRefresh: widget.service.refresh,
                 child: widget.service.announcements.isEmpty
                     ? ListView(
-                        physics: const AlwaysScrollableScrollPhysics(),
+                        physics: AlwaysScrollableScrollPhysics(),
                         children: [
                           if (!widget.service.isLoading &&
                               widget.service.errorMessage == null)
-                            const Padding(
+                            Padding(
                               padding: EdgeInsets.all(32),
                               child: Text(
                                 'No announcements yet.',
@@ -126,11 +132,11 @@ class _AnnouncementsScreenState extends State<AnnouncementsScreen> {
                         ],
                       )
                     : ListView.separated(
-                        physics: const AlwaysScrollableScrollPhysics(),
+                        physics: AlwaysScrollableScrollPhysics(),
                         padding: const EdgeInsets.all(16),
                         itemCount: widget.service.announcements.length,
                         separatorBuilder: (context, index) =>
-                            const SizedBox(height: 12),
+                            SizedBox(height: 12),
                         itemBuilder: (context, index) {
                           final announcement =
                               widget.service.announcements[index];
@@ -139,8 +145,8 @@ class _AnnouncementsScreenState extends State<AnnouncementsScreen> {
                           );
                           return Material(
                             color: unread
-                                ? const Color(0xFFEAF3FA)
-                                : Colors.white,
+                                ? appColor(context, 0xFFEAF3FA)
+                                : appColor(context, 0xFFFFFFFF),
                             borderRadius: BorderRadius.circular(16),
                             clipBehavior: Clip.antiAlias,
                             child: ListTile(
@@ -149,12 +155,12 @@ class _AnnouncementsScreenState extends State<AnnouncementsScreen> {
                                 unread
                                     ? Icons.mark_email_unread_outlined
                                     : Icons.drafts_outlined,
-                                color: navy,
+                                color: appColor(context, 0xFF0A2B5A),
                               ),
                               title: Text(
                                 announcement.title,
                                 style: TextStyle(
-                                  color: navy,
+                                  color: appColor(context, 0xFF0A2B5A),
                                   fontWeight: unread
                                       ? FontWeight.bold
                                       : FontWeight.normal,
@@ -166,9 +172,9 @@ class _AnnouncementsScreenState extends State<AnnouncementsScreen> {
                                   '${_date(announcement.date)} | ${unread ? 'Unread' : 'Read'}',
                                 ),
                               ),
-                              trailing: const Icon(
+                              trailing: Icon(
                                 Icons.chevron_right,
-                                color: navy,
+                                color: appColor(context, 0xFF0A2B5A),
                               ),
                               onTap: _openingId == null
                                   ? () => _openAnnouncement(announcement)

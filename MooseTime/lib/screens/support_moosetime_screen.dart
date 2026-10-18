@@ -1,3 +1,5 @@
+import '../services/theme_service.dart';
+
 import 'dart:async';
 
 import 'package:flutter/material.dart';
@@ -15,7 +17,6 @@ class SupportMooseTimeScreen extends StatefulWidget {
 class _SupportMooseTimeScreenState extends State<SupportMooseTimeScreen> {
   late final InAppPurchaseService _service;
   late int _seenNotice;
-  static const _navy = Color(0xFF0A2B5A);
 
   @override
   void initState() {
@@ -48,10 +49,12 @@ class _SupportMooseTimeScreenState extends State<SupportMooseTimeScreen> {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-    backgroundColor: const Color(0xFFF5F8FC),
+    backgroundColor: appColor(context, 0xFFF5F8FC),
     appBar: AppBar(
-      title: const Text('Support MooseTime'),
-      backgroundColor: _navy,
+      title: Text('Support MooseTime'),
+      backgroundColor: Theme.of(context).brightness == Brightness.dark
+          ? const Color(0xFF174529)
+          : const Color(0xFF0A2B5A),
       foregroundColor: Colors.white,
     ),
     body: AnimatedBuilder(
@@ -59,52 +62,59 @@ class _SupportMooseTimeScreenState extends State<SupportMooseTimeScreen> {
       builder: (context, _) => ListView(
         padding: const EdgeInsets.all(24),
         children: [
-          const Text(
+          Text(
             "MooseTime is free to use. If the app has been useful to you and you'd like to support development and app-store costs, you can leave an optional tip below.\n\nTips are completely optional and do not unlock additional features.",
-            style: TextStyle(fontSize: 16, height: 1.6, color: _navy),
+            style: TextStyle(
+              fontSize: 16,
+              height: 1.6,
+              color: appColor(context, 0xFF0A2B5A),
+            ),
           ),
-          const SizedBox(height: 24),
-          const Text(
+          SizedBox(height: 24),
+          Text(
             'Optional Tips',
             style: TextStyle(
               fontSize: 21,
               fontWeight: FontWeight.bold,
-              color: _navy,
+              color: appColor(context, 0xFF0A2B5A),
             ),
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
           if (!_service.supportedPlatform)
-            const Text(
+            Text(
               'Tips are currently unavailable on this device. Optional tips are available through the mobile App Store / Google Play version of MooseTime.',
-              style: TextStyle(fontSize: 16, height: 1.5, color: _navy),
+              style: TextStyle(
+                fontSize: 16,
+                height: 1.5,
+                color: appColor(context, 0xFF0A2B5A),
+              ),
             )
           else ...[
-            if (_service.loading)
-              const Center(child: CircularProgressIndicator()),
+            if (_service.loading) Center(child: CircularProgressIndicator()),
             if (_service.errorMessage != null) ...[
               Text(
                 _service.errorMessage!,
-                style: const TextStyle(color: _navy),
+                style: TextStyle(color: appColor(context, 0xFF0A2B5A)),
               ),
               TextButton.icon(
                 onPressed: _service.loading ? null : _service.initialize,
-                icon: const Icon(Icons.refresh),
-                label: const Text('Retry'),
+                icon: Icon(Icons.refresh),
+                label: Text('Retry'),
               ),
             ],
             if (_service.products.isNotEmpty &&
                 _service.missingProductIds.isNotEmpty)
-              const Padding(
+              Padding(
                 padding: EdgeInsets.only(bottom: 12),
                 child: Text(
                   'Some tip options are not available yet.',
-                  style: TextStyle(color: _navy),
+                  style: TextStyle(color: appColor(context, 0xFF0A2B5A)),
                 ),
               ),
             for (final product in _service.products)
               Card(
                 elevation: 0,
-                color: Colors.white,
+                color: appColor(context, 0xFFFFFFFF),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(16),
                 ),
@@ -115,10 +125,10 @@ class _SupportMooseTimeScreenState extends State<SupportMooseTimeScreen> {
                     children: [
                       Text(
                         tipProductLabels[product.id]!,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
-                          color: _navy,
+                          color: appColor(context, 0xFF0A2B5A),
                         ),
                       ),
                       if (product.title.isNotEmpty)
@@ -126,16 +136,18 @@ class _SupportMooseTimeScreenState extends State<SupportMooseTimeScreen> {
                           padding: const EdgeInsets.only(top: 4),
                           child: Text(
                             product.title,
-                            style: const TextStyle(color: Color(0xFF526780)),
+                            style: TextStyle(
+                              color: appColor(context, 0xFF526780),
+                            ),
                           ),
                         ),
-                      const SizedBox(height: 12),
+                      SizedBox(height: 12),
                       ElevatedButton(
                         onPressed: _service.busy || _service.loading
                             ? null
                             : () => _service.buy(product),
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF1976D2),
+                          backgroundColor: appColor(context, 0xFF1976D2),
                           foregroundColor: Colors.white,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12),
@@ -148,11 +160,11 @@ class _SupportMooseTimeScreenState extends State<SupportMooseTimeScreen> {
                 ),
               ),
             if (_service.pendingProductId != null || _service.confirming)
-              const Padding(
+              Padding(
                 padding: EdgeInsets.symmetric(vertical: 16),
                 child: Text(
                   'Waiting for the store to confirm your tip...',
-                  style: TextStyle(color: _navy),
+                  style: TextStyle(color: appColor(context, 0xFF0A2B5A)),
                 ),
               ),
             if (_service.hasUnfinishedPurchases)
@@ -160,13 +172,17 @@ class _SupportMooseTimeScreenState extends State<SupportMooseTimeScreen> {
                 onPressed: _service.confirming
                     ? null
                     : _service.retryConfirmation,
-                child: const Text('Retry purchase confirmation'),
+                child: Text('Retry purchase confirmation'),
               ),
           ],
-          const SizedBox(height: 24),
-          const Text(
+          SizedBox(height: 24),
+          Text(
             'Thank you for using MooseTime, whether or not you choose to leave a tip.',
-            style: TextStyle(fontSize: 16, height: 1.5, color: _navy),
+            style: TextStyle(
+              fontSize: 16,
+              height: 1.5,
+              color: appColor(context, 0xFF0A2B5A),
+            ),
           ),
         ],
       ),
