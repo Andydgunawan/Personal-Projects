@@ -181,7 +181,7 @@ class _HomeScreenState extends State<HomeScreen> {
         final unread = widget.announcementService.unreadCount;
         return IconButton(
           padding: const EdgeInsets.symmetric(horizontal: 8),
-          alignment: Alignment.topRight,
+          alignment: Alignment.centerRight,
           constraints: BoxConstraints(minWidth: 48, minHeight: 40),
           tooltip: unread == 0
               ? 'Announcements'
@@ -216,7 +216,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget buildHeader() {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.fromLTRB(24, 24, 24, 28),
+      padding: const EdgeInsets.fromLTRB(24, 20, 24, 24),
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: appHeaderColors(context, 0xFFEAF3FA, 0xFFDDEAF5),
@@ -228,29 +228,34 @@ class _HomeScreenState extends State<HomeScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Expanded(
-                child: Text(
-                  'Mission Duty\nCalculator',
-                  style: TextStyle(
-                    fontSize: 34,
-                    fontWeight: FontWeight.bold,
-                    color: appTextColor(context, 0xFF0A2B5A),
-                    height: 1.0,
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    'MooseTime',
+                    style: TextStyle(
+                      fontSize: 51,
+                      fontWeight: FontWeight.bold,
+                      color: appTextColor(context, 0xFF0A2B5A),
+                      height: 1.0,
+                    ),
                   ),
                 ),
               ),
               buildAnnouncementsButton(),
             ],
           ),
-          SizedBox(height: 8),
+          const SizedBox(height: 7),
           Text(
-            'PLAN SMARTER. FLY FURTHER.',
+            'A slightly better duty day calculator',
             style: TextStyle(
-              fontSize: 13,
-              letterSpacing: 0.8,
-              color: appTextColor(context, 0xFF6C819B),
+              fontSize: 17,
+              letterSpacing: 0,
+              height: 1.25,
+              color: appTextColor(context, 0xFF526780),
             ),
           ),
         ],
