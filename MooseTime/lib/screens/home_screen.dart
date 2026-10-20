@@ -235,7 +235,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   fit: BoxFit.scaleDown,
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    'MooseTime',
+                    'MooseTime!',
                     style: TextStyle(
                       fontSize: 51,
                       fontWeight: FontWeight.bold,
@@ -250,7 +250,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           const SizedBox(height: 7),
           Text(
-            'A slightly better duty day calculator',
+            'A Slightly Better C-17 Duty Day Calculator',
             style: TextStyle(
               fontSize: 17,
               letterSpacing: 0,
