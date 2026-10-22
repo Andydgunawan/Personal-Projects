@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MooseTime Data Deletion Request</title>
+</head>
+
+<body>
+  <h1>MooseTime Data Deletion Request</h1>
+
+  <p>
+    MooseTime is independently developed and operated by Andy Dylan Gunawan.
+  </p>
+
+  <p>
+    To request deletion of personal information associated with a feedback or
+    support submission, email:
+    <a href="mailto:moosetime.support@gmail.com">
+      moosetime.support@gmail.com
+    </a>
+  </p>
+
+  <p>
+    Please include enough information to reasonably identify the submission,
+    such as the email address used, approximate submission date, subject, or
+    other identifying details.
+  </p>
+
+  <p>
+    Information associated with an identifiable feedback or support submission
+    may be deleted upon request.
+  </p>
+
+  <p>
+    If feedback was submitted anonymously and does not contain information that
+    can reasonably be associated with you, the developer may be unable to
+    identify which submission belongs to you and therefore may be unable to
+    delete that specific submission.
+  </p>
+
+  <p>
+    Certain information may be retained where reasonably necessary for legal,
+    security, fraud-prevention, dispute-resolution, or other lawful purposes.
+    Technical logs maintained by third-party service providers may also be
+    retained according to those providers' retention policies.
+  </p>
+
+  <p>
+    Locally stored information, such as announcement read status and app
+    preferences, can generally be removed by clearing MooseTime's app data or
+    uninstalling the app.
+  </p>
+</body>
+</html>
