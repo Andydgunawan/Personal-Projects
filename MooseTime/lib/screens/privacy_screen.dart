@@ -7,7 +7,7 @@ import 'feedback_screen.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 // Update this date when revising the policy.
-const privacyLastUpdated = 'October 14, 2026';
+const privacyLastUpdated = 'October 22, 2026';
 
 class PrivacyScreen extends StatelessWidget {
   const PrivacyScreen({super.key});
@@ -126,23 +126,29 @@ class PrivacyScreen extends StatelessWidget {
                 _section(
                   context,
                   "1. Information MooseTime Collects",
-                  "MooseTime does not require users to create an account or sign in.\n\nThe app may collect information only when you choose to use certain features, such as submitting feedback or support requests.",
+                  "MooseTime does not require users to create an account or sign in.\n\nMost calculator functionality is performed locally on your device. However, MooseTime connects to third-party backend services for certain features, including retrieving in-app announcements and submitting feedback or support requests.",
                 ),
                 _section(
                   context,
                   "Feedback and Support",
-                  "When you submit feedback through MooseTime, the app may collect:\n\n- Feedback type\n- Subject\n- Message\n- Optional contact email address\n- App version\n- Device platform\n- Date and time of submission\n\nThe contact email field is optional. You may submit feedback without providing an email address.\n\nFeedback submissions are stored using Supabase.",
+                  "When you submit feedback through MooseTime, the app sends the following information to Supabase:\n\n- Feedback type\n- Subject\n- Message\n- Optional contact email address\n- App version\n- Device platform\n- Date and time of submission\n\nThe contact email field is optional. You may submit feedback without providing an email address.\n\nFeedback submissions are stored using Supabase.",
+                  subsection: true,
+                ),
+                _section(
+                  context,
+                  "Automatic Network and Service Logs",
+                  "When MooseTime communicates with Supabase, including when retrieving announcements or submitting feedback, Supabase infrastructure may automatically process and retain technical information associated with the request.\n\nDepending on Supabase's logging and infrastructure configuration, this information may include items such as:\n- IP Address\n- User agent or application environment\n- Request method and request URL or endpoint\n- Date and time of the request\n- Response status and other request or diagnostic metadata\n- Limited network or geographic information derived by Supabase's infrastructure\n\nThis technical information may be processed by Supabase for purposes such as operating the service, security, abuse prevention, troubleshooting, diagnostics, and service monitoring.\n\nMooseTime does not use these infrastructure logs to create user profiles or advertising profiles.",
                   subsection: true,
                 ),
                 _section(
                   context,
                   "2. Calculator Data",
-                  "MooseTime's mission and duty-time calculations are intended to be performed locally on your device.\n\nCalculator inputs and calculated results are not intentionally uploaded to Supabase or stored on MooseTime's servers.\n\nMooseTime does not maintain a cloud history of your calculations.\n\nIf this behavior changes in a future version, this Privacy Policy will be updated.",
+                  "MooseTime performs its mission and duty-time calculations locally on your device.\n\nCalculator inputs and calculated results are not transmitted by MooseTime to Supabase and are not stored in MooseTime's feedback or announcement databases.\n\nMooseTime does not maintain a cloud history of your calculator inputs or calculated results.\n\nNetwork requests made for other app features, such as retrieving announcements or submitting feedback, may generate service and infrastructure logs as described in this Privacy Policy.\n\nIf MooseTime's handling of calculator data changes in a future version, this Privacy Policy will be updated accordingly.",
                 ),
                 _section(
                   context,
                   "3. Announcement Data",
-                  "MooseTime retrieves in-app announcements from Supabase.\n\nThe app may store the IDs of announcements you have read locally on your device so that it can determine which announcements should appear as unread.\n\nThis read/unread information is stored locally using device storage such as SharedPreferences and is not intended to be uploaded to MooseTime's servers.",
+                  "MooseTime retrieves in-app announcements from Supabase. Retrieving announcements requires a network request to Supabase and may result in technical request information being processed or logged by Supabase as described in the Automatic Network and Service Logs section of this Privacy Policy.\n\nMooseTime stores the identifiers of announcements you have read locally on your device so that it can determine which announcements should appear as unread.\n\nMooseTime does not transmit those locally stored read/unread identifiers to its announcement database.",
                 ),
                 _section(
                   context,
@@ -169,7 +175,7 @@ class PrivacyScreen extends StatelessWidget {
                 _section(
                   context,
                   "8. Donations and Payments",
-                  "MooseTime may provide users with an optional way to financially support the app.\n\nIf donations, in-app purchases, or other payment features are added, payment processing may be handled by Apple, Google, or another third-party payment provider.\n\nMooseTime does not intend to directly store payment card information.\n\nThis Privacy Policy should be updated if payment functionality changes.",
+                  "MooseTime may provide users with an optional way to financially support development.\n\nWhere an optional support or payment feature is available, payment processing is handled through the applicable third-party platform or payment service.\n\nMooseTime does not directly collect or store users' payment card information.\n\nPayment providers and app-store platforms may independently process information related to purchases, transactions, accounts, devices, or payment activity according to their own privacy policies.",
                 ),
                 _section(
                   context,
@@ -182,18 +188,18 @@ class PrivacyScreen extends StatelessWidget {
                 ),
                 _section(
                   context,
-                  "10. Data Retention",
-                  "Feedback and support submissions may be retained for as long as reasonably necessary to review the submission, respond to issues, improve MooseTime, or maintain development records.\n\nSubmissions may later be deleted when they are no longer needed.\n\nLocally stored information, such as announcement read status, generally remains on your device until:\n- the app clears or replaces that information;\n- you clear the app's data; or\n- you uninstall MooseTime.",
+                  "10. Data Retention and Deletion",
+                  "Feedback and support submissions may be retained for as long as reasonably necessary to review the submission, respond to issues, improve MooseTime, maintain development records, protect the service, or satisfy applicable legal obligations.\n\nYou may request deletion of personal information contained in a feedback or support submission by contacting:\n\nmoosetime.support@gmail.com\n\nPlease provide enough information for the developer to reasonably identify the submission you would like deleted. This may include the email address used with the submission, the approximate submission date, its subject, or other identifying details.\n\nIf feedback was submitted anonymously and does not contain information that can reasonably be associated with you, the developer may be unable to identify which submission belongs to you and therefore may be unable to fulfill a request to delete that specific submission.\n\nRequests will be evaluated and processed as reasonably appropriate, subject to any information that must be retained for legitimate security, legal, fraud-prevention, dispute-resolution, or other lawful purposes.\n\nLocally stored information, such as announcement read status and app preferences, generally remains on your device until:\n- the app clears or replaces that information;\n- you clear the app's data; or\n- you uninstall MooseTime.\n\nTechnical logs maintained by third-party service providers may be retained according to those providers' applicable retention policies.",
                 ),
                 _section(
                   context,
                   "11. Data Security",
-                  "Reasonable efforts are made to protect information associated with MooseTime.\n\nMooseTime uses access controls and database security features, including Supabase Row Level Security, to limit how application data can be accessed.\n\nHowever, no electronic storage, transmission, or online service can be guaranteed to be completely secure.",
+                  "Reasonable technical and organizational measures are used to protect information associated with MooseTime.\n\nMooseTime uses Supabase for certain backend services. Access to MooseTime's Supabase database is restricted through database access controls, including Row Level Security policies where configured.\n\nNo electronic storage, transmission, database, or online service can be guaranteed to be completely secure.",
                 ),
                 _section(
                   context,
                   "12. Children's Privacy",
-                  "MooseTime is not designed specifically for children and is intended for users who have a legitimate reason to use its mission and duty-time planning functionality.\n\nMooseTime does not knowingly seek to collect personal information from children.\n\nIf you believe personal information from a child has been submitted through MooseTime, please contact the developer through the Feedback & Support section.",
+                  "MooseTime is not designed specifically for children and is intended for users who have a legitimate reason to use its mission and duty-time planning functionality.\n\nMooseTime does not knowingly seek to collect personal information from children.\n\nIf you believe personal information from a child has been submitted through MooseTime, please contact the developer at moosetime.support@gmail.com or through the Feedback & Support section of the app.",
                   linkLabel: 'Feedback & Support',
                   onLinkTap: () => Navigator.of(context).push<void>(
                     MaterialPageRoute(builder: (context) => FeedbackScreen()),
@@ -212,26 +218,10 @@ class PrivacyScreen extends StatelessWidget {
                 _section(
                   context,
                   "15. Contact",
-                  "If you have questions about this Privacy Policy or how MooseTime handles information, you can contact the developer through the Feedback & Support section of the app.",
+                  "MooseTime is independently developed and operated by Andy Dylan Gunawan.\n\nIf you have questions about this Privacy Policy, MooseTime's handling of information, or a request concerning your personal information, contact:\n\nmoosetime.support@gmail.com\n\nYou may also contact the developer through the Feedback & Support section of the app.",
                   linkLabel: 'Feedback & Support',
                   onLinkTap: () => Navigator.of(context).push<void>(
                     MaterialPageRoute(builder: (context) => FeedbackScreen()),
-                  ),
-                ),
-                SizedBox(height: 28),
-                Container(
-                  padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    color: appColor(context, 0xFFEAF3FA),
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  child: Text(
-                    'Draft notice: This Privacy Policy is a draft and should be reviewed before MooseTime is publicly released.',
-                    style: TextStyle(
-                      fontSize: 14,
-                      height: 1.5,
-                      color: appTextColor(context, 0xFF0A2B5A),
-                    ),
                   ),
                 ),
                 SizedBox(height: 16),

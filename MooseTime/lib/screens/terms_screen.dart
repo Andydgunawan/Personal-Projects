@@ -6,7 +6,7 @@ import 'feedback_screen.dart';
 import 'privacy_screen.dart';
 
 // Update this date when revising the terms.
-const termsLastUpdated = 'October 14, 2026';
+const termsLastUpdated = 'October 22, 2026';
 
 class TermsScreen extends StatelessWidget {
   const TermsScreen({super.key});
@@ -107,12 +107,12 @@ class TermsScreen extends StatelessWidget {
                 _section(
                   context,
                   "2. No Official Affiliation",
-                  "MooseTime is an independently developed application.\n\nMooseTime is not officially affiliated with, endorsed by, sponsored by, approved by, or operated by the United States Air Force, the United States Department of Defense, or any other government agency or military organization.\n\nAny references to military terminology, procedures, or calculations are included solely for the purpose of providing the app's functionality.",
+                  "MooseTime is an independently developed application.\n\nMooseTime is not officially affiliated with, endorsed by, sponsored by, approved by, or operated by the United States Air Force, the United States Department of Defense, or any other government agency or military organization.\n\nAny references to military terminology, procedures, calculations, regulations, or publications are provided solely for context and to support the app’s functionality. Such references do not imply official approval, validation, endorsement, or affiliation",
                 ),
                 _section(
                   context,
                   "3. User Responsibility",
-                  "You are responsible for verifying all calculations and information produced by MooseTime against current official publications, regulations, policies, procedures, and unit guidance before relying on them.\n\nYou should not use MooseTime as the sole basis for operational, mission, safety, legal, medical, or regulatory decisions.\n\nIf there is any conflict between information shown by MooseTime and an official source, the official source takes precedence.",
+                  "You are responsible for verifying all calculations and information produced by MooseTime against all applicable official publications, regulations, policies, procedures, and unit guidance, including any current Air Force or C-17-specific guidance that applies to your operation.\n\nYou should not use MooseTime as the sole basis for operational, mission, safety, legal, medical, or regulatory decisions.\n\nIf there is any conflict between information shown by MooseTime and an official source, the official source takes precedence.",
                 ),
                 _section(
                   context,
@@ -174,25 +174,9 @@ class TermsScreen extends StatelessWidget {
                 _section(
                   context,
                   "15. Contact",
-                  "If you have questions, concerns, or feedback regarding MooseTime or these Terms of Use, you can contact the developer through the Feedback & Support section of the app.",
+                  "MooseTime is independently developed and operated by Andy Dylan Gunawan.\n\nIf you have questions, concerns, feedback, legal inquiries, or support requests regarding MooseTime or these Terms of Use, you may contact:\n\nmoosetime.support@gmail.com\n\nYou may also contact the developer through the Feedback & Support section of the app.",
                   linkLabel: 'Feedback & Support',
                   linkPage: FeedbackScreen(),
-                ),
-                SizedBox(height: 28),
-                Container(
-                  padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    color: appColor(context, 0xFFEAF3FA),
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  child: Text(
-                    'Draft notice: These Terms of Use are a draft and should be reviewed before MooseTime is publicly released.',
-                    style: TextStyle(
-                      fontSize: 14,
-                      height: 1.5,
-                      color: appTextColor(context, 0xFF0A2B5A),
-                    ),
-                  ),
                 ),
                 SizedBox(height: 16),
               ],

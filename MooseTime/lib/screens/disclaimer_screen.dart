@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'feedback_screen.dart';
 
 // Update this date when revising the disclaimer.
-const disclaimerLastUpdated = 'October 14, 2026';
+const disclaimerLastUpdated = 'October 22, 2026';
 
 class DisclaimerScreen extends StatelessWidget {
   const DisclaimerScreen({super.key});
@@ -112,7 +112,7 @@ class DisclaimerScreen extends StatelessWidget {
                 _section(
                   context,
                   "3. Verify All Calculations",
-                  "Users are responsible for independently verifying all calculations and information produced by MooseTime against current official publications, regulations, policies, procedures, and unit guidance.\n\nIf information provided by MooseTime conflicts with an official source, the official source always takes precedence.\n\nMooseTime should not be used as the sole basis for operational, mission, safety, legal, regulatory, or other critical decisions.",
+                  "Users are responsible for independently verifying all calculations and information produced by MooseTime against current official publications, regulations, policies, procedures, and unit guidance, including, where applicable, AFMAN 202V3_AMCSup Flight Operations, AFMAN 2C-17V3, and any other applicable regulations or guidance.\n\nIf information provided by MooseTime conflicts with an official source, the official source always takes precedence.\n\nMooseTime should not be used as the sole basis for operational, mission, safety, legal, regulatory, or other critical decisions.",
                 ),
                 _section(
                   context,
@@ -142,26 +142,10 @@ class DisclaimerScreen extends StatelessWidget {
                 _section(
                   context,
                   "9. Questions or Concerns",
-                  "If you believe MooseTime contains an incorrect calculation, outdated rule, software bug, or other issue, please report it through the Feedback & Support section of the app.",
+                  "If you believe MooseTime contains an incorrect calculation, outdated rule, software bug, or other issue, please report it through the Feedback & Support section of the app or contact:\n\nmoosetime.support@gmail.com\n\nMooseTime is independently developed and operated by Andy Dylan Gunawan.",
                   linkLabel: 'Feedback & Support',
                   onLinkTap: () => Navigator.of(context).push<void>(
                     MaterialPageRoute(builder: (context) => FeedbackScreen()),
-                  ),
-                ),
-                SizedBox(height: 28),
-                Container(
-                  padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    color: appColor(context, 0xFFEAF3FA),
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  child: Text(
-                    'Draft notice: This Disclaimer is a draft and should be reviewed before MooseTime is publicly released.',
-                    style: TextStyle(
-                      fontSize: 14,
-                      height: 1.5,
-                      color: appTextColor(context, 0xFF0A2B5A),
-                    ),
                   ),
                 ),
                 SizedBox(height: 16),

@@ -187,6 +187,15 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
                         return null;
                       },
                     ),
+                    SizedBox(height: 16),
+                    Text(
+                      'Feedback is sent to MooseTime through Supabase. Your app version and device platform are included to help diagnose issues. Contact email is optional.',
+                      style: TextStyle(
+                        fontSize: 12,
+                        height: 1.5,
+                        color: appTextColor(context, 0xFF6C819B),
+                      ),
+                    ),
                     SizedBox(height: 24),
                     SizedBox(
                       height: 56,

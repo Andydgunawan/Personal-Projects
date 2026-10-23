@@ -1,4 +1,4 @@
-package com.example.moose_time
+package com.andygunawan.moosetime
 
 import io.flutter.embedding.android.FlutterActivity
 
