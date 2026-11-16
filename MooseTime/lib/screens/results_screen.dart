@@ -3,6 +3,7 @@ import '../services/theme_service.dart';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart' show SystemUiOverlayStyle;
 
 import '../calculators/alert_calculators/alpha.dart';
 import '../calculators/alert_calculators/bravo.dart';
@@ -68,7 +69,7 @@ class _ResultsScreenState extends State<ResultsScreen> {
       return [
         _Section('Duty Limits', Icons.schedule, [
           _Row(
-            '14hr Alert',
+            '14hr Set',
             'Alert - 14:00',
             Icons.notifications,
             c.calculateFourteenHrSet(zuluTime),
@@ -124,7 +125,7 @@ class _ResultsScreenState extends State<ResultsScreen> {
     return [
       _Section('Duty Limits', Icons.schedule, [
         _Row(
-          '14hr Alert',
+          '14hr Set',
           'Alert - 14:00',
           Icons.notifications,
           c.calculateFourteenHrSet(alert),
@@ -403,193 +404,223 @@ class _ResultsScreenState extends State<ResultsScreen> {
     ];
     return Scaffold(
       backgroundColor: appColor(context, 0xFFE7F2FC),
-      body: SafeArea(
-        child: Center(
-          child: ConstrainedBox(
-            constraints: BoxConstraints(maxWidth: 720),
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.fromLTRB(8, 22, 20, 28),
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: appHeaderColors(
-                          context,
-                          0xFF0A2B5A,
-                          0xFF527D9E,
-                        ),
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                      ),
-                    ),
-                    child: Row(
-                      children: [
-                        if (showBackButton)
-                          IconButton(
-                            onPressed: () => Navigator.maybePop(context),
-                            tooltip: 'Back',
-                            icon: Icon(Icons.arrow_back, color: Colors.white),
-                          ),
-                        SizedBox(width: 8),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Results',
-                                style: TextStyle(
-                                  fontSize: 32,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white,
-                                ),
-                              ),
-                              Text(
-                                mode,
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        if (_exporting)
-                          Padding(
-                            padding: EdgeInsets.all(12),
-                            child: SizedBox(
-                              width: 20,
-                              height: 20,
-                              child: CircularProgressIndicator(
-                                color: Colors.white,
-                                strokeWidth: 2,
-                              ),
-                            ),
-                          )
-                        else
-                          PopupMenuButton<String>(
-                            tooltip: 'Results options',
-                            icon: Icon(
-                              Icons.more_vert,
-                              size: 34,
-                              color: Colors.white,
-                            ),
-                            onSelected: (value) {
-                              switch (value) {
-                                case 'customize':
-                                  _customize();
-                                case 'export':
-                                  _export();
-                                case 'feedback':
-                                  Navigator.of(context).push<void>(
-                                    MaterialPageRoute(
-                                      builder: (context) => FeedbackScreen(),
-                                    ),
-                                  );
-                              }
-                            },
-                            itemBuilder: (context) => [
-                              PopupMenuItem(
-                                value: 'customize',
-                                child: Text('Customize visible times'),
-                              ),
-                              PopupMenuItem(
-                                value: 'export',
-                                child: Text('Export result'),
-                              ),
-                              PopupMenuItem(
-                                value: 'feedback',
-                                child: Text('Feedback & Support'),
-                              ),
-                            ],
-                          ),
-                      ],
-                    ),
-                  ),
-                  RepaintBoundary(
-                    key: _exportKey,
-                    child: ColoredBox(
-                      color: appColor(context, 0xFFE7F2FC),
-                      child: Padding(
-                        padding: const EdgeInsets.all(12),
-                        child: Column(
-                          children: [
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                vertical: 16,
-                                horizontal: 8,
-                              ),
-                              decoration: BoxDecoration(
-                                color: appColor(context, 0xFFDDEEFF),
-                                borderRadius: BorderRadius.circular(16),
-                              ),
+      body: AnnotatedRegion<SystemUiOverlayStyle>(
+        value: mooseTimeHeaderOverlayStyle,
+        child: Stack(
+          children: [
+            SafeArea(
+              top: false,
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    Container(
+                      width: double.infinity,
+                      color: mooseTimeNavy,
+                      child: SafeArea(
+                        bottom: false,
+                        child: Center(
+                          child: ConstrainedBox(
+                            constraints: BoxConstraints(maxWidth: 720),
+                            child: Padding(
+                              padding: const EdgeInsets.fromLTRB(8, 22, 20, 28),
                               child: Row(
                                 children: [
-                                  metadata(
-                                    Icons.calendar_month,
-                                    'Julian Day',
-                                    JulianCalendar.dateToJulian(zuluTime)
-                                        .toString()
-                                        .padLeft(3, '0'),
-                                  ),
-                                  metadata(
-                                    Icons.location_on,
-                                    'Zulu Conversion',
-                                    '${zuluConstant >= 0 ? '+' : ''}$zuluConstant',
-                                  ),
-                                  metadata(
-                                    Icons.calendar_month,
-                                    'Date (Local)',
-                                    '${months[localDate.month - 1]} ${localDate.day}, ${localDate.year}',
-                                  ),
-                                ],
-                              ),
-                            ),
-                            for (final section in _sections())
-                              if (section.rows.any(
-                                (row) => !_hiddenRows.contains(row.title),
-                              )) ...[
-                                SizedBox(height: 12),
-                                _sectionCard(section),
-                              ],
-                            Padding(
-                              padding: const EdgeInsets.symmetric(
-                                vertical: 16,
-                                horizontal: 8,
-                              ),
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Icon(
-                                    Icons.info,
-                                    color: appColor(context, 0xFF1976D2),
-                                    size: 30,
-                                  ),
-                                  SizedBox(width: 12),
-                                  Expanded(
-                                    child: Text(
-                                      'All times shown in Zulu (Z) and $localLabel.\nDay badges show days before (-1) or after (+1, +2) the mission date in each column.',
-                                      style: TextStyle(
-                                        color: appTextColor(
-                                          context,
-                                          0xFF1976D2,
-                                        ),
-                                        fontSize: 12,
+                                  if (showBackButton)
+                                    IconButton(
+                                      onPressed: () =>
+                                          Navigator.maybePop(context),
+                                      tooltip: 'Back',
+                                      icon: Icon(
+                                        Icons.arrow_back,
+                                        color: Colors.white,
                                       ),
                                     ),
+                                  SizedBox(width: 8),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          'Results',
+                                          style: TextStyle(
+                                            fontSize: 32,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                        Text(
+                                          mode,
+                                          style: TextStyle(
+                                            fontSize: 16,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  if (_exporting)
+                                    Padding(
+                                      padding: EdgeInsets.all(12),
+                                      child: SizedBox(
+                                        width: 20,
+                                        height: 20,
+                                        child: CircularProgressIndicator(
+                                          color: Colors.white,
+                                          strokeWidth: 2,
+                                        ),
+                                      ),
+                                    )
+                                  else
+                                    PopupMenuButton<String>(
+                                      tooltip: 'Results options',
+                                      icon: Icon(
+                                        Icons.more_vert,
+                                        size: 34,
+                                        color: Colors.white,
+                                      ),
+                                      onSelected: (value) {
+                                        switch (value) {
+                                          case 'customize':
+                                            _customize();
+                                          case 'export':
+                                            _export();
+                                          case 'feedback':
+                                            Navigator.of(context).push<void>(
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    FeedbackScreen(),
+                                              ),
+                                            );
+                                        }
+                                      },
+                                      itemBuilder: (context) => [
+                                        PopupMenuItem(
+                                          value: 'customize',
+                                          child: Text(
+                                            'Customize visible times',
+                                          ),
+                                        ),
+                                        PopupMenuItem(
+                                          value: 'export',
+                                          child: Text('Export result'),
+                                        ),
+                                        PopupMenuItem(
+                                          value: 'feedback',
+                                          child: Text('Feedback & Support'),
+                                        ),
+                                      ],
+                                    ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    Center(
+                      child: ConstrainedBox(
+                        constraints: BoxConstraints(maxWidth: 720),
+                        child: RepaintBoundary(
+                          key: _exportKey,
+                          child: ColoredBox(
+                            color: appColor(context, 0xFFE7F2FC),
+                            child: Padding(
+                              padding: const EdgeInsets.all(12),
+                              child: Column(
+                                children: [
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(
+                                      vertical: 16,
+                                      horizontal: 8,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: isDarkTheme(context)
+                                          ? darkElevatedSurface
+                                          : const Color(0xFFD0E5F8),
+                                      borderRadius: BorderRadius.circular(16),
+                                    ),
+                                    child: Row(
+                                      children: [
+                                        metadata(
+                                          Icons.calendar_month,
+                                          'Julian Day',
+                                          JulianCalendar.dateToJulian(zuluTime)
+                                              .toString()
+                                              .padLeft(3, '0'),
+                                        ),
+                                        metadata(
+                                          Icons.location_on,
+                                          'Zulu Conversion',
+                                          '${zuluConstant >= 0 ? '+' : ''}$zuluConstant',
+                                        ),
+                                        metadata(
+                                          Icons.calendar_month,
+                                          'Date (Local)',
+                                          '${months[localDate.month - 1]} ${localDate.day}, ${localDate.year}',
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  for (final section in _sections())
+                                    if (section.rows.any(
+                                      (row) => !_hiddenRows.contains(row.title),
+                                    )) ...[
+                                      SizedBox(height: 12),
+                                      _sectionCard(section),
+                                    ],
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                      vertical: 16,
+                                      horizontal: 8,
+                                    ),
+                                    child: Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Icon(
+                                          Icons.info,
+                                          color: isDarkTheme(context)
+                                              ? darkAccent
+                                              : const Color(0xFF1976D2),
+                                          size: 30,
+                                        ),
+                                        SizedBox(width: 12),
+                                        Expanded(
+                                          child: Text(
+                                            'All times shown in Zulu (Z) and $localLabel.\nDay badges show days before (-1) or after (+1, +2) the mission date in each column.',
+                                            style: TextStyle(
+                                              color: appTextColor(
+                                                context,
+                                                0xFF1976D2,
+                                              ),
+                                              fontSize: 12,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ],
                               ),
                             ),
-                          ],
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
-          ),
+            // Keep the status-bar backdrop navy while the header scrolls.
+            Positioned(
+              top: 0,
+              left: 0,
+              right: 0,
+              height: MediaQuery.paddingOf(context).top,
+              child: const ColoredBox(color: mooseTimeNavy),
+            ),
+          ],
         ),
       ),
     );

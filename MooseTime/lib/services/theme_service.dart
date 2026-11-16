@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart' show SystemUiOverlayStyle;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ThemeService extends ChangeNotifier {
@@ -29,6 +30,14 @@ class ThemeScope extends InheritedNotifier<ThemeService> {
   static ThemeService? maybeOf(BuildContext context) =>
       context.dependOnInheritedWidgetOfExactType<ThemeScope>()?.notifier;
 }
+
+const mooseTimeNavy = Color(0xFF0A2B5A);
+const mooseTimeHeaderOverlayStyle = SystemUiOverlayStyle(
+  statusBarColor: Colors.transparent,
+  statusBarIconBrightness: Brightness.light,
+  statusBarBrightness: Brightness.dark,
+  systemStatusBarContrastEnforced: false,
+);
 
 // Shared dark palette. Light colors remain supplied by each existing widget.
 const darkBackground = Color(0xFF0D1117);

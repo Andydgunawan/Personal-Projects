@@ -166,9 +166,25 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: appColor(context, 0xFFF5F8FC),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(children: [buildHeader(), buildMainCard()]),
+      body: AnnotatedRegion<SystemUiOverlayStyle>(
+        value: mooseTimeHeaderOverlayStyle,
+        child: Stack(
+          children: [
+            SafeArea(
+              top: false,
+              child: SingleChildScrollView(
+                child: Column(children: [buildHeader(), buildMainCard()]),
+              ),
+            ),
+            // Keep the status-bar backdrop navy while the header scrolls.
+            Positioned(
+              top: 0,
+              left: 0,
+              right: 0,
+              height: MediaQuery.paddingOf(context).top,
+              child: const ColoredBox(color: mooseTimeNavy),
+            ),
+          ],
         ),
       ),
     );
@@ -204,7 +220,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 : const Color(0xFF1976D2),
             child: Icon(
               Icons.notifications_outlined,
-              color: appColor(context, 0xFF0A2B5A),
+              color: Colors.white,
               size: 34,
             ),
           ),
@@ -216,49 +232,60 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget buildHeader() {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.fromLTRB(24, 20, 24, 24),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: appHeaderColors(context, 0xFFEAF3FA, 0xFFDDEAF5),
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-        ),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
+      color: mooseTimeNavy,
+      child: SafeArea(
+        bottom: false,
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(24, 20, 24, 24),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Expanded(
-                child: FittedBox(
-                  fit: BoxFit.scaleDown,
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    'MooseTime!',
-                    style: TextStyle(
-                      fontSize: 51,
-                      fontWeight: FontWeight.bold,
-                      color: appTextColor(context, 0xFF0A2B5A),
-                      height: 1.0,
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Expanded(
+                    child: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      alignment: Alignment.centerLeft,
+                      child: Text.rich(
+                        TextSpan(
+                          children: [
+                            const TextSpan(text: 'Moose'),
+                            TextSpan(
+                              text: 'Time',
+                              style: TextStyle(
+                                color: isDarkTheme(context)
+                                    ? darkAccent
+                                    : const Color(0xFFBFD9EF),
+                              ),
+                            ),
+                          ],
+                        ),
+                        style: const TextStyle(
+                          fontSize: 51,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                          height: 1.0,
+                        ),
+                      ),
                     ),
                   ),
+                  buildAnnouncementsButton(),
+                ],
+              ),
+              const SizedBox(height: 7),
+              Text(
+                'A Slightly Better C-17 Duty Day Calculator',
+                style: TextStyle(
+                  fontSize: 17,
+                  letterSpacing: 0,
+                  height: 1.25,
+                  color: Colors.white70,
                 ),
               ),
-              buildAnnouncementsButton(),
             ],
           ),
-          const SizedBox(height: 7),
-          Text(
-            'A Slightly Better C-17 Duty Day Calculator',
-            style: TextStyle(
-              fontSize: 17,
-              letterSpacing: 0,
-              height: 1.25,
-              color: appTextColor(context, 0xFF526780),
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }

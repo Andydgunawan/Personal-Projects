@@ -57,7 +57,7 @@ class AboutMooseTimeScreen extends StatelessWidget {
                       Icon(
                         Icons.check_circle_outline,
                         size: 20,
-                        color: appColor(context, 0xFF1976D2),
+                        color: appColor(context, 0xFF0A2B5A),
                       ),
                       SizedBox(width: 12),
                       Expanded(
